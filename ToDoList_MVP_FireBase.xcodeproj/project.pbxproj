@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		A14C26DA2AD9C906006F7816 /* ListCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A14C26D92AD9C906006F7816 /* ListCell.swift */; };
 		A1CF4AAA2AD9B44F00C6E34C /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1CF4AA92AD9B44F00C6E34C /* AppDelegate.swift */; };
 		A1CF4AAC2AD9B44F00C6E34C /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1CF4AAB2AD9B44F00C6E34C /* SceneDelegate.swift */; };
 		A1CF4AAE2AD9B44F00C6E34C /* MainListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1CF4AAD2AD9B44F00C6E34C /* MainListViewController.swift */; };
@@ -16,6 +17,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		A14C26D92AD9C906006F7816 /* ListCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ListCell.swift; sourceTree = "<group>"; };
 		A1CF4AA62AD9B44F00C6E34C /* ToDoList_MVP_FireBase.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ToDoList_MVP_FireBase.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		A1CF4AA92AD9B44F00C6E34C /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		A1CF4AAB2AD9B44F00C6E34C /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -79,6 +81,7 @@
 			children = (
 				A1CF4AAD2AD9B44F00C6E34C /* MainListViewController.swift */,
 				A1CF4ABF2AD9B4F700C6E34C /* MainListPresenter.swift */,
+				A14C26D92AD9C906006F7816 /* ListCell.swift */,
 			);
 			path = Main;
 			sourceTree = "<group>";
@@ -156,6 +159,7 @@
 				A1CF4AAE2AD9B44F00C6E34C /* MainListViewController.swift in Sources */,
 				A1CF4AAA2AD9B44F00C6E34C /* AppDelegate.swift in Sources */,
 				A1CF4AAC2AD9B44F00C6E34C /* SceneDelegate.swift in Sources */,
+				A14C26DA2AD9C906006F7816 /* ListCell.swift in Sources */,
 				A1CF4AC02AD9B4F700C6E34C /* MainListPresenter.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
