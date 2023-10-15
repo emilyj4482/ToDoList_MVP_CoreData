@@ -99,6 +99,6 @@ extension MainListViewController: MainListProtocol {
 
 private extension MainListViewController {
     @objc func addListButtonTapped() {
-        presenter.addListButtonTapped()
+        present(AddListViewController(), animated: true)
     }
 }

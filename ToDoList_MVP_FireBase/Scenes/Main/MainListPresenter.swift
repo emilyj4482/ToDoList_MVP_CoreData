@@ -23,10 +23,6 @@ final class MainListPresenter: NSObject {
         viewController.setupNavigationBar()
         viewController.setupViews()
     }
-    
-    func addListButtonTapped() {
-        print("button tapped")
-    }
 }
 
 extension MainListPresenter: UICollectionViewDataSource {
