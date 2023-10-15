@@ -10,11 +10,30 @@ import UIKit
 final class ListCell: UICollectionViewCell {
     static let identifier = "ListCell"
     
+    private lazy var listIcon: UIImageView = {
+        let imageView = UIImageView()
+        
+        imageView.image = UIImage(systemName: "checklist.checked")
+        imageView.tintColor = .label
+        
+        return imageView
+    }()
+    
     private lazy var listNameLabel: UILabel = {
         
         let label = UILabel()
         
-        label.text = "test text"
+        label.text = "to study"
+        
+        return label
+    }()
+    
+    private lazy var taskCountLabel: UILabel = {
+        let label = UILabel()
+        
+        label.text = "10"
+        label.font = .systemFont(ofSize: 10.0, weight: .light)
+        label.textColor = .gray
         
         return label
     }()
@@ -22,13 +41,20 @@ final class ListCell: UICollectionViewCell {
     func setup() {
         backgroundColor = .systemBackground
         
-        addSubview(listNameLabel)
-        listNameLabel.translatesAutoresizingMaskIntoConstraints = false
-        
+        [listIcon, listNameLabel, taskCountLabel]
+            .forEach {
+                addSubview($0)
+                $0.translatesAutoresizingMaskIntoConstraints = false
+            }
+                
         guard let superview = listNameLabel.superview else { return }
         
         NSLayoutConstraint.activate([
-            listNameLabel.leadingAnchor.constraint(equalTo: superview.leadingAnchor, constant: 10.0)
+            listIcon.leadingAnchor.constraint(equalTo: superview.leadingAnchor),
+            
+            listNameLabel.leadingAnchor.constraint(equalTo: listIcon.trailingAnchor, constant: 10.0),
+            
+            taskCountLabel.trailingAnchor.constraint(equalTo: superview.trailingAnchor, constant: -5.0)
         ])
     }
 }

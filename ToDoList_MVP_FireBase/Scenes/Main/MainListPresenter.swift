@@ -9,7 +9,7 @@ import UIKit
 
 protocol MainListProtocol {
     func setupNavigationBar()
-    func setupView()
+    func setupViews()
 }
 
 final class MainListPresenter: NSObject {
@@ -21,13 +21,17 @@ final class MainListPresenter: NSObject {
     
     func viewDidLoad() {
         viewController.setupNavigationBar()
-        viewController.setupView()
+        viewController.setupViews()
+    }
+    
+    func addListButtonTapped() {
+        print("button tapped")
     }
 }
 
 extension MainListPresenter: UICollectionViewDataSource {
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return 3
+        return 5
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
