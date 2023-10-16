@@ -34,6 +34,12 @@ final class TodoListViewController: UIViewController {
         return collectionView
     }()
     
+    private lazy var rightBarButtonItem: UIBarButtonItem = {
+        let barButtonItem = UIBarButtonItem(title: "Edit", style: .plain, target: self, action: #selector(rightBarButtonTapped))
+        
+        return barButtonItem
+    }()
+    
     private lazy var addTaskButton: UIButton = {
         let button = UIButton()
         
@@ -61,6 +67,7 @@ extension TodoListViewController: TodoListProtocol {
     func setupViews() {
         view.backgroundColor = .systemBackground
         navigationController?.navigationBar.tintColor = .mainTintColor
+        navigationItem.rightBarButtonItem = rightBarButtonItem
         
         [collectionView, addTaskButton]
             .forEach {
@@ -84,7 +91,11 @@ extension TodoListViewController: TodoListProtocol {
 }
 
 private extension TodoListViewController {
+    @objc func rightBarButtonTapped() {
+        print("edit btn tapped")
+    }
+    
     @objc func addTaskButtonTapped() {
-        print("btn tapped")
+        print("add btn tapped")
     }
 }
