@@ -16,6 +16,7 @@ final class TaskCell: UICollectionViewCell {
         button.setImage(UIImage(systemName: "circle"), for: .normal)
         button.setImage(UIImage(systemName: "checkmark.circle"), for: .selected)
         button.tintColor = button.isSelected ? .green : .red
+        button.addTarget(self, action: #selector(doneButtonTapped), for: .touchUpInside)
         
         return button
     }()
@@ -34,6 +35,7 @@ final class TaskCell: UICollectionViewCell {
         button.setImage(UIImage(systemName: "star"), for: .normal)
         button.setImage(UIImage(systemName: "star.fill"), for: .selected)
         button.tintColor = .yellow
+        button.addTarget(self, action: #selector(starButtonTapped), for: .touchUpInside)
         
         return button
     }()
@@ -57,5 +59,16 @@ final class TaskCell: UICollectionViewCell {
             starButton.centerYAnchor.constraint(equalTo: taskTitleLabel.centerYAnchor),
             starButton.trailingAnchor.constraint(equalTo: superview.trailingAnchor)
         ])
+    }
+}
+
+private extension TaskCell {
+    @objc func doneButtonTapped() {
+        doneButton.isSelected.toggle()
+        doneButton.tintColor = doneButton.isSelected ? .green : .red
+    }
+    
+    @objc func starButtonTapped() {
+        starButton.isSelected.toggle()
     }
 }

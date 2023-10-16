@@ -33,7 +33,6 @@ final class AddListViewController: UIViewController {
         
         textField.placeholder = "Untitled list"
         textField.font = .systemFont(ofSize: 35.0, weight: .bold)
-        // textField.borderStyle = .none
         textField.becomeFirstResponder()
         
         return textField
