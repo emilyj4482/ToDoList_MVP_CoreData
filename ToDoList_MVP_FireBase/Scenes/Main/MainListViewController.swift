@@ -50,7 +50,7 @@ final class MainListViewController: UIViewController {
         let button = UIButton()
         
         button.setImage(UIImage(systemName: "plus"), for: .normal)
-        button.setTitle(" Add a List", for: .normal)
+        button.setTitle(" New List", for: .normal)
         button.tintColor = .mainTintColor
         button.setTitleColor(.mainTintColor, for: .normal)
         button.titleLabel?.font = .systemFont(ofSize: 17.0)
@@ -99,6 +99,7 @@ extension MainListViewController: MainListProtocol {
 
 private extension MainListViewController {
     @objc func addListButtonTapped() {
-        present(AddListViewController(), animated: true)
+        let vc = UINavigationController(rootViewController: AddListViewController())
+        present(vc, animated: true)
     }
 }
