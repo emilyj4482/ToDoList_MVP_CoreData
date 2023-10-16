@@ -23,7 +23,7 @@ final class ListCell: UICollectionViewCell {
         
         let label = UILabel()
         
-        label.text = "to study"
+        label.text = "Untitled list"
         
         return label
     }()
@@ -39,8 +39,6 @@ final class ListCell: UICollectionViewCell {
     }()
     
     func setup() {
-        backgroundColor = .systemBackground
-        
         [listIcon, listNameLabel, taskCountLabel]
             .forEach {
                 addSubview($0)
@@ -50,10 +48,13 @@ final class ListCell: UICollectionViewCell {
         guard let superview = listNameLabel.superview else { return }
         
         NSLayoutConstraint.activate([
+            listIcon.centerYAnchor.constraint(equalTo: superview.centerYAnchor),
             listIcon.leadingAnchor.constraint(equalTo: superview.leadingAnchor),
             
+            listNameLabel.centerYAnchor.constraint(equalTo: listIcon.centerYAnchor),
             listNameLabel.leadingAnchor.constraint(equalTo: listIcon.trailingAnchor, constant: 10.0),
             
+            taskCountLabel.centerYAnchor.constraint(equalTo: listNameLabel.centerYAnchor),
             taskCountLabel.trailingAnchor.constraint(equalTo: superview.trailingAnchor, constant: -5.0)
         ])
     }

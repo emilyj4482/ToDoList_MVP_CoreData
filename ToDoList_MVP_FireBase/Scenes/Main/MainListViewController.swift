@@ -32,7 +32,6 @@ final class MainListViewController: UIViewController {
         // cell
         collectionView.register(ListCell.self, forCellWithReuseIdentifier: ListCell.identifier)
         
-        
         return collectionView
     }()
     
@@ -94,6 +93,10 @@ extension MainListViewController: MainListProtocol {
             addListButton.leadingAnchor.constraint(equalTo: countLabel.leadingAnchor),
             addListButton.bottomAnchor.constraint(equalTo: superview.bottomAnchor, constant: -inset)
         ])
+    }
+    
+    func goToTodoListView() {
+        navigationController?.pushViewController(TodoListViewController(), animated: true)
     }
 }
 
