@@ -15,6 +15,7 @@ protocol MainListProtocol {
 
 final class MainListPresenter: NSObject {
     private let viewController: MainListProtocol
+    private let fm = FirebaseManager.shared
     
     init(viewController: MainListProtocol) {
         self.viewController = viewController
@@ -23,6 +24,7 @@ final class MainListPresenter: NSObject {
     func viewDidLoad() {
         viewController.setupNavigationBar()
         viewController.setupViews()
+        fm.test()
     }
 }
 
