@@ -8,11 +8,22 @@
 import Foundation
 
 struct Task: Codable {
-    var id = UUID()
+    var id = UUID().uuidString
     let listId: Int
     var title: String
     var isDone: Bool
     var isImportant: Bool
+    
+    var toDictionary: [String: Any] {
+        let dict: [String: Any] = [
+            "id": id,
+            "listId": listId,
+            "title": title,
+            "isDone": isDone,
+            "isImportant": isImportant
+        ]
+        return dict
+    }
     
     mutating func update(title: String, isDone: Bool, isImportant: Bool) {
         self.title = title

@@ -15,7 +15,7 @@ protocol MainListProtocol {
 
 final class MainListPresenter: NSObject {
     private let viewController: MainListProtocol
-    private let fm = FirebaseManager.shared
+    private let database = FirebaseManager.shared
     
     init(viewController: MainListProtocol) {
         self.viewController = viewController
@@ -24,11 +24,12 @@ final class MainListPresenter: NSObject {
     func viewDidLoad() {
         viewController.setupNavigationBar()
         viewController.setupViews()
-        fm.test()
+        database.test()
     }
 }
 
 extension MainListPresenter: UICollectionViewDataSource {
+    
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         return 5
     }
@@ -36,7 +37,9 @@ extension MainListPresenter: UICollectionViewDataSource {
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: ListCell.identifier, for: indexPath) as? ListCell else { return UICollectionViewCell() }
         
-        cell.setup()
+        // cell.configure(list: list, superview: cell)
+        
+        cell.layout()
         
         return cell
     }

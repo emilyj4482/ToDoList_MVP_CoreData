@@ -38,7 +38,8 @@ final class ListCell: UICollectionViewCell {
         return label
     }()
     
-    func setup() {
+    // private func layout(_ superview: UICollectionViewCell) {
+    func layout() {
         [listIcon, listNameLabel, taskCountLabel]
             .forEach {
                 addSubview($0)
@@ -57,5 +58,12 @@ final class ListCell: UICollectionViewCell {
             taskCountLabel.centerYAnchor.constraint(equalTo: listNameLabel.centerYAnchor),
             taskCountLabel.trailingAnchor.constraint(equalTo: superview.trailingAnchor, constant: -5.0)
         ])
+    }
+    
+    func configure(list: List, superview cell: UICollectionViewCell) {
+        // layout(cell)
+        
+        listNameLabel.text = list.name
+        taskCountLabel.text = "\(list.tasks.count)"
     }
 }
