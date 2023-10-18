@@ -95,6 +95,10 @@ extension MainListViewController: MainListProtocol {
         ])
     }
     
+    func reload() {
+        collectionView.reloadData()
+    }
+    
     func goToTodoListView() {
         navigationController?.pushViewController(TodoListViewController(), animated: true)
     }

@@ -6,16 +6,20 @@
 //
 
 import UIKit
+import Combine
 
 protocol MainListProtocol {
     func setupNavigationBar()
     func setupViews()
+    func reload()
     func goToTodoListView()
 }
 
 final class MainListPresenter: NSObject {
-    private let viewController: MainListProtocol
+    let viewController: MainListProtocol
     private let database = FirebaseManager.shared
+    
+    
     
     init(viewController: MainListProtocol) {
         self.viewController = viewController
@@ -31,7 +35,12 @@ final class MainListPresenter: NSObject {
 extension MainListPresenter: UICollectionViewDataSource {
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return 5
+        /*
+        database.combineList.receive(on: DispatchQueue.main).sink {
+            self.lists = $0
+        }*/
+        
+        return database.lists.count
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {

@@ -6,6 +6,7 @@
 //
 
 import Firebase
+import Combine
 
 final class FirebaseManager {
     static let shared = FirebaseManager()
@@ -14,6 +15,8 @@ final class FirebaseManager {
     
     let testList = List(id: 1, name: "Important", tasks: [Task(listId: 1, title: "to study", isDone: false, isImportant: false), Task(listId: 1, title: "to die", isDone: false, isImportant: false)])
     let testList2 = List(id: 2, name: "Untitled list", tasks: [Task(listId: 1, title: "to die", isDone: false, isImportant: false)])
+    
+    let combineList = PassthroughSubject<[List], Never>()
     
     var lists: [List] = []
     
@@ -54,23 +57,28 @@ final class FirebaseManager {
                 let data = try JSONSerialization.data(withJSONObject: snapshot.value as Any)
                 let decoder = JSONDecoder()
                 let array: [List] = try decoder.decode([List].self, from: data)
-                self.lists = array
+                // self.lists = array
                 // print(self.lists)
                 // ui update
-                DispatchQueue.main.async {
-                    print(array)
+                // print(array)
+
+                // self.combineList.send(array)
+                array.publisher.sink { completion in
+                    print("\(completion)")
+                } receiveValue: { output in
+                    print("output >>>>> \(output)")
+                    self.lists.append(output)
                 }
+
             } catch let error {
                 print("ERROR >>> \(error.localizedDescription)")
             }
         }
         
-        
-        /*
         DispatchQueue.main.asyncAfter(deadline: .now() + 3.0) {
             print(self.lists)
         }
-         */
+         
         
     }
 }
