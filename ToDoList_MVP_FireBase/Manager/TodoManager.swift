@@ -11,16 +11,23 @@ final class TodoManager {
     
     static let shared = TodoManager()
     
+    private let fm = FirebaseManager()
+    
     // List.id 저장용 프로퍼티
-    private var lastListId: Int = 1
+    var lastListId: Int = 1
     
     var lists: [List] = []
     
-    private func createList(_ text: String) -> List {
-        return List(id: 5, name: text, tasks: [])
+    private func createList(_ name: String) -> List {
+        let nextId = lastListId + 1
+        lastListId = nextId
+        
+        return List(id: nextId, name: name, tasks: [])
     }
     
-    func addList(_ text: String) {
-        lists.append(createList(text))
+    func addList(_ name: String) {
+        let list = createList(name)
+        lists.append(list)
+        fm.addList(lists)
     }
 }

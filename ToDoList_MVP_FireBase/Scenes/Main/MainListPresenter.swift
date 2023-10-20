@@ -10,14 +10,14 @@ import UIKit
 protocol MainListProtocol {
     func setupNavigationBar()
     func setupViews()
-    // func reload()
-    func goToTodoListView()
     func fetchData()
-    func getLists() -> [List]
+    func goToTodoListView()
+    func observeNotification()
 }
 
 final class MainListPresenter: NSObject {
     let viewController: MainListProtocol
+    let tm = TodoManager.shared
     
     init(viewController: MainListProtocol) {
         self.viewController = viewController
@@ -27,6 +27,7 @@ final class MainListPresenter: NSObject {
         viewController.setupNavigationBar()
         viewController.setupViews()
         viewController.fetchData()
+        viewController.observeNotification()
     }
 }
 
@@ -34,15 +35,14 @@ extension MainListPresenter: UICollectionViewDataSource {
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         
-        return viewController.getLists().count
+        return tm.lists.count
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: ListCell.identifier, for: indexPath) as? ListCell else { return UICollectionViewCell() }
         
-        let list = viewController.getLists()[indexPath.item]
+        let list = tm.lists[indexPath.item]
         cell.configure(list: list, superview: cell)
-        // cell.layout()
         
         return cell
     }

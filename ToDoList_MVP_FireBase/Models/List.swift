@@ -10,18 +10,15 @@ import Foundation
 struct List: Codable {
     let id: Int
     var name: String
-    var tasks: [Task]
+    var tasks: [Task]?
     
     var toDictionary: [String: Any] {
-        
-        let tasksArray = tasks.map { $0.toDictionary }
-        
+        let tasksArray = tasks?.compactMap { $0.toDictionary }
         let dict: [String: Any] = [
             "id": id,
             "name": name,
-            "tasks": tasksArray
+            "tasks": tasksArray ?? []
         ]
-        
         return dict
     }
     

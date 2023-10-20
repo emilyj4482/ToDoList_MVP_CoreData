@@ -10,7 +10,6 @@ import Firebase
 
 final class MainListViewController: UIViewController {
     
-    // var lists: [List] = []
     let tm = TodoManager.shared
     let db = Database.database().reference()
     
@@ -100,40 +99,46 @@ extension MainListViewController: MainListProtocol {
         ])
     }
     
-    func reload() {
-        collectionView.reloadData()
+    func fetchData() {
+        db.getData { error, snapshot in
+            guard
+                let snapshot = snapshot,
+                snapshot.exists()
+            else { return }
+                do {
+                    let data = try JSONSerialization.data(withJSONObject: snapshot.value as Any)
+                    let decoder = JSONDecoder()
+                    let array: [List] = try decoder.decode([List].self, from: data)
+                    
+                    DispatchQueue.main.async {
+                        self.tm.lists = array
+                        self.reload()
+                    }
+                    
+                    let lastId = array.last?.id
+                    self.tm.lastListId = lastId ?? 1
+                } catch {
+                    print("ERROR >>> \(error)")
+                }
+        }
     }
     
     func goToTodoListView() {
         navigationController?.pushViewController(TodoListViewController(), animated: true)
     }
     
-    func fetchData() {
-        db.getData { error, snapshot in
-            do {
-                let data = try JSONSerialization.data(withJSONObject: snapshot?.value)
-                let decoder = JSONDecoder()
-                let array: [List] = try decoder.decode([List].self, from: data)
-                
-                DispatchQueue.main.async {
-                    self.tm.lists = array
-                    self.reload()
-                }
-            } catch {
-                print("ERROR >>> \(error)")
-            }
-        }
+    func observeNotification() {
+        NotificationCenter.default.addObserver(self, selector: #selector(reload), name: Notification.modalDismissed, object: nil)
     }
-    
-    func getLists() -> [List] {
-        return tm.lists
-    }
-    
 }
 
 private extension MainListViewController {
     @objc func addListButtonTapped() {
         let vc = UINavigationController(rootViewController: AddListViewController())
         present(vc, animated: true)
+    }
+    
+    @objc func reload() {
+        collectionView.reloadData()
     }
 }

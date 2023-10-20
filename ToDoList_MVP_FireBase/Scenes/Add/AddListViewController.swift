@@ -70,6 +70,10 @@ extension AddListViewController: AddListProtocol {
         dismiss(animated: true)
     }
     
+    func postNotification() {
+        NotificationCenter.default.post(name: Notification.modalDismissed, object: nil)
+    }
+    
     // list name 중복검사
     private func examListName(_ text: String) -> String {
         let list = tm.lists.map { list in
