@@ -6,8 +6,12 @@
 //
 
 import UIKit
+import Firebase
 
 final class MainListViewController: UIViewController {
+    
+    let tm = TodoManager.shared
+    let db = Database.database().reference()
     
     private lazy var presenter = MainListPresenter(viewController: self)
     
@@ -95,8 +99,36 @@ extension MainListViewController: MainListProtocol {
         ])
     }
     
+    func fetchData() {
+        db.getData { error, snapshot in
+            guard
+                let snapshot = snapshot,
+                snapshot.exists()
+            else { return }
+                do {
+                    let data = try JSONSerialization.data(withJSONObject: snapshot.value as Any)
+                    let decoder = JSONDecoder()
+                    let array: [List] = try decoder.decode([List].self, from: data)
+                    
+                    DispatchQueue.main.async {
+                        self.tm.lists = array
+                        self.reload()
+                    }
+                    
+                    let lastId = array.last?.id
+                    self.tm.lastListId = lastId ?? 1
+                } catch {
+                    print("ERROR >>> \(error)")
+                }
+        }
+    }
+    
     func goToTodoListView() {
         navigationController?.pushViewController(TodoListViewController(), animated: true)
+    }
+    
+    func observeNotification() {
+        NotificationCenter.default.addObserver(self, selector: #selector(reload), name: Notification.modalDismissed, object: nil)
     }
 }
 
@@ -104,5 +136,9 @@ private extension MainListViewController {
     @objc func addListButtonTapped() {
         let vc = UINavigationController(rootViewController: AddListViewController())
         present(vc, animated: true)
+    }
+    
+    @objc func reload() {
+        collectionView.reloadData()
     }
 }

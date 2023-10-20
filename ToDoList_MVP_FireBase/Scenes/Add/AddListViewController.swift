@@ -9,6 +9,8 @@ import UIKit
 
 final class AddListViewController: UIViewController {
     
+    let tm = TodoManager.shared
+    
     private lazy var presenter = AddListPresenter(viewController: self)
     
     // 구성 : bar button cancel, done, textfield
@@ -38,7 +40,6 @@ final class AddListViewController: UIViewController {
         return textField
     }()
     
-    
     override func viewDidLoad() {
         super.viewDidLoad()
         presenter.viewDidLoad()
@@ -67,6 +68,34 @@ extension AddListViewController: AddListProtocol {
     
     func dismiss() {
         dismiss(animated: true)
+    }
+    
+    func postNotification() {
+        NotificationCenter.default.post(name: Notification.modalDismissed, object: nil)
+    }
+    
+    // list name 중복검사
+    private func examListName(_ text: String) -> String {
+        let list = tm.lists.map { list in
+            list.name
+        }
+        
+        var count = 1
+        var listName = text
+        while list.contains(listName) {
+            listName = "\(text) (\(count))"
+            count += 1
+        }
+        
+        return listName
+    }
+    
+    func addList() {
+        guard var newListName = textField.text?.trim() else { return }
+        if newListName.isEmpty {
+            newListName = "Untitled list"
+        }
+        tm.addList(examListName(newListName))
     }
 }
 

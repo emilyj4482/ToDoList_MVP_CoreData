@@ -12,8 +12,7 @@ final class ListCell: UICollectionViewCell {
     
     private lazy var listIcon: UIImageView = {
         let imageView = UIImageView()
-        
-        imageView.image = UIImage(systemName: "checklist.checked")
+
         imageView.tintColor = .label
         
         return imageView
@@ -38,7 +37,7 @@ final class ListCell: UICollectionViewCell {
         return label
     }()
     
-    func setup() {
+    private func layout(_ superview: UICollectionViewCell) {
         [listIcon, listNameLabel, taskCountLabel]
             .forEach {
                 addSubview($0)
@@ -57,5 +56,19 @@ final class ListCell: UICollectionViewCell {
             taskCountLabel.centerYAnchor.constraint(equalTo: listNameLabel.centerYAnchor),
             taskCountLabel.trailingAnchor.constraint(equalTo: superview.trailingAnchor, constant: -5.0)
         ])
+    }
+    
+    func configure(list: List, superview cell: UICollectionViewCell) {
+        layout(cell)
+        
+        // Important list의 경우 icon을 star로 지정
+        if list.id == 1 {
+            listIcon.image = UIImage(systemName: "star.fill")
+        } else {
+            listIcon.image = UIImage(systemName: "checklist.checked")
+        }
+        
+        listNameLabel.text = list.name
+        taskCountLabel.text = "\(list.tasks?.count ?? 0)"
     }
 }
