@@ -6,8 +6,12 @@
 //
 
 import UIKit
+import Firebase
 
 final class MainListViewController: UIViewController {
+    
+    var lists: [List] = []
+    let db = Database.database().reference()
     
     private lazy var presenter = MainListPresenter(viewController: self)
     
@@ -102,6 +106,28 @@ extension MainListViewController: MainListProtocol {
     func goToTodoListView() {
         navigationController?.pushViewController(TodoListViewController(), animated: true)
     }
+    
+    func fetchData() {
+        db.getData { error, snapshot in
+            do {
+                let data = try JSONSerialization.data(withJSONObject: snapshot?.value)
+                let decoder = JSONDecoder()
+                let array: [List] = try decoder.decode([List].self, from: data)
+                
+                DispatchQueue.main.async {
+                    self.lists = array
+                    self.reload()
+                }
+            } catch {
+                print("ERROR >>> \(error)")
+            }
+        }
+    }
+    
+    func getLists() -> [List] {
+        return lists
+    }
+    
 }
 
 private extension MainListViewController {

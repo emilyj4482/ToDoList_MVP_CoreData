@@ -38,8 +38,8 @@ final class ListCell: UICollectionViewCell {
         return label
     }()
     
-    // private func layout(_ superview: UICollectionViewCell) {
-    func layout() {
+    private func layout(_ superview: UICollectionViewCell) {
+    // func layout() {
         [listIcon, listNameLabel, taskCountLabel]
             .forEach {
                 addSubview($0)
@@ -61,7 +61,7 @@ final class ListCell: UICollectionViewCell {
     }
     
     func configure(list: List, superview cell: UICollectionViewCell) {
-        // layout(cell)
+        layout(cell)
         
         listNameLabel.text = list.name
         taskCountLabel.text = "\(list.tasks.count)"
