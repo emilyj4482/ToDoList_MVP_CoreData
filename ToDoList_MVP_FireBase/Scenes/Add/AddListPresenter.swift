@@ -10,6 +10,7 @@ import UIKit
 protocol AddListProtocol {
     func setupViews()
     func dismiss()
+    func addList()
 }
 
 final class AddListPresenter: NSObject {
@@ -28,6 +29,7 @@ final class AddListPresenter: NSObject {
     }
     
     func rightBarButtonTapped() {
+        viewController.addList()
         viewController.dismiss()
     }
 }

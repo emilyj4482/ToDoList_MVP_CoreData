@@ -10,7 +10,8 @@ import Firebase
 
 final class MainListViewController: UIViewController {
     
-    var lists: [List] = []
+    // var lists: [List] = []
+    let tm = TodoManager.shared
     let db = Database.database().reference()
     
     private lazy var presenter = MainListPresenter(viewController: self)
@@ -115,7 +116,7 @@ extension MainListViewController: MainListProtocol {
                 let array: [List] = try decoder.decode([List].self, from: data)
                 
                 DispatchQueue.main.async {
-                    self.lists = array
+                    self.tm.lists = array
                     self.reload()
                 }
             } catch {
@@ -125,7 +126,7 @@ extension MainListViewController: MainListProtocol {
     }
     
     func getLists() -> [List] {
-        return lists
+        return tm.lists
     }
     
 }
