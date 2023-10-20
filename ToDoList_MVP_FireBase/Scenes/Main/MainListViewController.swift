@@ -123,8 +123,10 @@ extension MainListViewController: MainListProtocol {
         }
     }
     
-    func goToTodoListView() {
-        navigationController?.pushViewController(TodoListViewController(), animated: true)
+    func goToTodoListView(index: Int) {
+        let vc = TodoListViewController()
+        vc.list = tm.lists[index]
+        navigationController?.pushViewController(vc, animated: true)
     }
     
     func observeNotification() {

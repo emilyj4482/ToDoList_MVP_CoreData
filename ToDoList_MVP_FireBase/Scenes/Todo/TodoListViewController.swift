@@ -9,6 +9,8 @@ import UIKit
 
 final class TodoListViewController: UIViewController {
     
+    var list: List?
+    
     private lazy var presenter = TodoListPresenter(viewController: self)
     
     private lazy var collectionView: UICollectionView = {
@@ -61,7 +63,7 @@ final class TodoListViewController: UIViewController {
 
 extension TodoListViewController: TodoListProtocol {
     func setTitle() {
-        navigationItem.title = "Untitled list"
+        navigationItem.title = list?.name
     }
     
     func setupViews() {

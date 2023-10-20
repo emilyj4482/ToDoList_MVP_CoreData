@@ -11,7 +11,7 @@ protocol MainListProtocol {
     func setupNavigationBar()
     func setupViews()
     func fetchData()
-    func goToTodoListView()
+    func goToTodoListView(index: Int)
     func observeNotification()
 }
 
@@ -50,6 +50,6 @@ extension MainListPresenter: UICollectionViewDataSource {
 
 extension MainListPresenter: UICollectionViewDelegate {
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        viewController.goToTodoListView()
+        viewController.goToTodoListView(index: indexPath.item)
     }
 }
