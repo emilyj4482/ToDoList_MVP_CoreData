@@ -9,7 +9,9 @@ import UIKit
 
 final class TodoListViewController: UIViewController {
     
-    var list: List?
+    // var list: List?
+    
+    let tm = TodoManager.shared
     
     private lazy var presenter = TodoListPresenter(viewController: self)
     
@@ -63,7 +65,7 @@ final class TodoListViewController: UIViewController {
 
 extension TodoListViewController: TodoListProtocol {
     func setTitle() {
-        navigationItem.title = list?.name
+        navigationItem.title = tm.list?.name
     }
     
     func setupViews() {

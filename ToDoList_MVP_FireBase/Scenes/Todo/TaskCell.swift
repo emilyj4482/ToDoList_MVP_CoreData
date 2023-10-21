@@ -15,7 +15,6 @@ final class TaskCell: UICollectionViewCell {
         
         button.setImage(UIImage(systemName: "circle"), for: .normal)
         button.setImage(UIImage(systemName: "checkmark.circle"), for: .selected)
-        button.tintColor = button.isSelected ? .green : .red
         button.addTarget(self, action: #selector(doneButtonTapped), for: .touchUpInside)
         
         return button
@@ -23,9 +22,6 @@ final class TaskCell: UICollectionViewCell {
     
     private lazy var taskTitleLabel: UILabel = {
         let label = UILabel()
-        
-        label.text = "to study"
-        
         return label
     }()
     
@@ -40,14 +36,12 @@ final class TaskCell: UICollectionViewCell {
         return button
     }()
     
-    func setup() {
+    private func layout(_ superview: UICollectionViewCell) {
         [doneButton, taskTitleLabel, starButton]
             .forEach {
                 addSubview($0)
                 $0.translatesAutoresizingMaskIntoConstraints = false
             }
-        
-        guard let superview = taskTitleLabel.superview else { return }
         
         NSLayoutConstraint.activate([
             doneButton.centerYAnchor.constraint(equalTo: superview.centerYAnchor),
@@ -59,6 +53,15 @@ final class TaskCell: UICollectionViewCell {
             starButton.centerYAnchor.constraint(equalTo: taskTitleLabel.centerYAnchor),
             starButton.trailingAnchor.constraint(equalTo: superview.trailingAnchor)
         ])
+    }
+    
+    func configure(task: Task, superview cell: UICollectionViewCell) {
+        layout(cell)
+        
+        taskTitleLabel.text = task.title
+        doneButton.isSelected = task.isDone ? true : false
+        doneButton.tintColor = doneButton.isSelected ? .green : .red
+        starButton.isSelected = task.isImportant ? true : false
     }
 }
 

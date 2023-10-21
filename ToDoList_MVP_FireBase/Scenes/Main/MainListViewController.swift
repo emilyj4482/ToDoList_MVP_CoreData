@@ -124,9 +124,9 @@ extension MainListViewController: MainListProtocol {
     }
     
     func goToTodoListView(index: Int) {
-        let vc = TodoListViewController()
-        vc.list = tm.lists[index]
-        navigationController?.pushViewController(vc, animated: true)
+        // let vc = TodoListViewController()
+        tm.list = tm.lists[index]
+        navigationController?.pushViewController(TodoListViewController(), animated: true)
     }
     
     func observeNotification() {

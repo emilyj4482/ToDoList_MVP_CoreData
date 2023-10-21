@@ -5,7 +5,7 @@
 //  Created by EMILY on 2023/10/17.
 //
 
-import Firebase
+import Foundation
 
 final class TodoManager {
     
@@ -17,6 +17,8 @@ final class TodoManager {
     var lastListId: Int = 1
     
     var lists: [List] = []
+    
+    var list: List?
     
     private func createList(_ name: String) -> List {
         let nextId = lastListId + 1
