@@ -17,7 +17,6 @@
 		A1A6AF482ADECAD800181093 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = A1A6AF472ADECAD800181093 /* GoogleService-Info.plist */; };
 		A1A7B1D52ADD9B1000F9214A /* List.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1A7B1D42ADD9B1000F9214A /* List.swift */; };
 		A1A7B1D72ADD9B1500F9214A /* Task.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1A7B1D62ADD9B1500F9214A /* Task.swift */; };
-		A1A928112AE2B48800E38C2C /* FirebaseManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1A928102AE2B48800E38C2C /* FirebaseManager.swift */; };
 		A1A928132AE2CB9400E38C2C /* +NotificationCenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1A928122AE2CB9400E38C2C /* +NotificationCenter.swift */; };
 		A1CF4AAA2AD9B44F00C6E34C /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1CF4AA92AD9B44F00C6E34C /* AppDelegate.swift */; };
 		A1CF4AAC2AD9B44F00C6E34C /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1CF4AAB2AD9B44F00C6E34C /* SceneDelegate.swift */; };
@@ -40,7 +39,6 @@
 		A1A6AF472ADECAD800181093 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		A1A7B1D42ADD9B1000F9214A /* List.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = List.swift; sourceTree = "<group>"; };
 		A1A7B1D62ADD9B1500F9214A /* Task.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Task.swift; sourceTree = "<group>"; };
-		A1A928102AE2B48800E38C2C /* FirebaseManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FirebaseManager.swift; sourceTree = "<group>"; };
 		A1A928122AE2CB9400E38C2C /* +NotificationCenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "+NotificationCenter.swift"; sourceTree = "<group>"; };
 		A1CF4AA62AD9B44F00C6E34C /* ToDoList_MVP_FireBase.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ToDoList_MVP_FireBase.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		A1CF4AA92AD9B44F00C6E34C /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -87,7 +85,6 @@
 			isa = PBXGroup;
 			children = (
 				A1A6AF442ADE98E300181093 /* TodoManager.swift */,
-				A1A928102AE2B48800E38C2C /* FirebaseManager.swift */,
 			);
 			path = Manager;
 			sourceTree = "<group>";
@@ -265,7 +262,6 @@
 				A1CF4AAC2AD9B44F00C6E34C /* SceneDelegate.swift in Sources */,
 				A1A7B1D72ADD9B1500F9214A /* Task.swift in Sources */,
 				A1E1DB5B2ADC7C4E007D46FD /* TaskCell.swift in Sources */,
-				A1A928112AE2B48800E38C2C /* FirebaseManager.swift in Sources */,
 				A1A928132AE2CB9400E38C2C /* +NotificationCenter.swift in Sources */,
 				A182C5CD2ADC69F00044CFA5 /* MainTintColor.swift in Sources */,
 				A14C26DA2AD9C906006F7816 /* ListCell.swift in Sources */,

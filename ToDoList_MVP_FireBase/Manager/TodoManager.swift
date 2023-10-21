@@ -6,19 +6,23 @@
 //
 
 import Foundation
+import Firebase
 
 final class TodoManager {
     
     static let shared = TodoManager()
     
-    private let fm = FirebaseManager()
-    
-    // List.id 저장용 프로퍼티
-    var lastListId: Int = 1
-    
+    var lastListId: Int = 1     // List.id 저장용 프로퍼티
     var lists: [List] = []
-    
     var list: List?
+    
+    private let db = Database.database().reference()
+    
+    // firebase realtime database에 저장
+    private func saveData() {
+        let data = lists.map { $0.toDictionary }
+        db.setValue(data)
+    }
     
     private func createList(_ name: String) -> List {
         let nextId = lastListId + 1
@@ -30,12 +34,13 @@ final class TodoManager {
     func addList(_ name: String) {
         let list = createList(name)
         lists.append(list)
-        fm.addList(lists)
+        saveData()
     }
     
     func updateList(_ name: String) {
         if let index = lists.firstIndex(where: { $0.id == list?.id }) {
             lists[index].update(name: name)
         }
+        saveData()
     }
 }
