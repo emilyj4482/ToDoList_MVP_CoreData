@@ -9,8 +9,6 @@ import UIKit
 
 final class TodoListViewController: UIViewController {
     
-    // var list: List?
-    
     let tm = TodoManager.shared
     
     private lazy var presenter = TodoListPresenter(viewController: self)
@@ -96,7 +94,27 @@ extension TodoListViewController: TodoListProtocol {
 
 private extension TodoListViewController {
     @objc func rightBarButtonTapped() {
-        print("edit btn tapped")
+        // textfield를 가진 alert 창을 띄워 list 이름 수정 기능 제공
+        let editAlert = UIAlertController(title: "Type your new list name down below.", message: "", preferredStyle: .alert)
+        let btnCancel = UIAlertAction(title: "Cancel", style: .cancel)
+        let btnDone = UIAlertAction(title: "Done", style: .default) { [unowned self] _ in
+            guard let text = editAlert.textFields?[0].text?.trim() else { return }
+            
+            if !text.isEmpty {
+                tm.updateList(text)
+                // view title 및 main view reload
+                navigationItem.title = text
+                NotificationCenter.default.post(name: Notification.reloadMainView, object: nil)
+            }
+        }
+        
+        editAlert.addTextField { tf in
+            tf.placeholder = self.tm.list?.name ?? ""
+        }
+        editAlert.addAction(btnCancel)
+        editAlert.addAction(btnDone)
+        
+        present(editAlert, animated: true)
     }
     
     @objc func addTaskButtonTapped() {

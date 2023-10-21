@@ -32,4 +32,10 @@ final class TodoManager {
         lists.append(list)
         fm.addList(lists)
     }
+    
+    func updateList(_ name: String) {
+        if let index = lists.firstIndex(where: { $0.id == list?.id }) {
+            lists[index].update(name: name)
+        }
+    }
 }

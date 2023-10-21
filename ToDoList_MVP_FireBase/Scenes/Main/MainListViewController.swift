@@ -124,13 +124,12 @@ extension MainListViewController: MainListProtocol {
     }
     
     func goToTodoListView(index: Int) {
-        // let vc = TodoListViewController()
         tm.list = tm.lists[index]
         navigationController?.pushViewController(TodoListViewController(), animated: true)
     }
     
     func observeNotification() {
-        NotificationCenter.default.addObserver(self, selector: #selector(reload), name: Notification.modalDismissed, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(reload), name: Notification.reloadMainView, object: nil)
     }
 }
 

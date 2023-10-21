@@ -71,7 +71,7 @@ extension AddListViewController: AddListProtocol {
     }
     
     func postNotification() {
-        NotificationCenter.default.post(name: Notification.modalDismissed, object: nil)
+        NotificationCenter.default.post(name: Notification.reloadMainView, object: nil)
     }
     
     // list name 중복검사

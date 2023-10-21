@@ -8,5 +8,5 @@
 import Foundation
 
 extension Notification {
-    static let modalDismissed = Notification.Name("modalDismissed")
+    static let reloadMainView = Notification.Name("reloadMainView")
 }
