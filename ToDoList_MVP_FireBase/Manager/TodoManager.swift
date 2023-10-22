@@ -18,6 +18,13 @@ final class TodoManager {
     
     private let db = Database.database().reference()
     
+    init() {
+        print("test init")
+        if list != nil && list?.tasks == nil {
+            // tasks에 [] 주입
+        }
+    }
+    
     // firebase realtime database에 저장
     private func saveData() {
         let data = lists.map { $0.toDictionary }
@@ -50,14 +57,15 @@ final class TodoManager {
     
     func addTask(_ title: String) {
         if var list = list,
-//            var tasks = list.tasks,
            let index = lists.firstIndex(where: { $0.id == list.id }) {
             let task = Task(listId: list.id, title: title, isDone: false, isImportant: false)
-            
-            // tasks.append(task)
-            // lists[index].tasks = tasks
-            // list.tasks = tasks
-
+            if lists[index].tasks == nil {
+                lists[index].tasks = [task]
+                list.tasks = [task]
+            } else {
+                lists[index].tasks?.append(task)
+                list.tasks?.append(task)
+            }
             print(lists[index].tasks)
         }
     }
