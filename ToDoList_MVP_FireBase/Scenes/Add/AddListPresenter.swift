@@ -8,7 +8,7 @@
 import UIKit
 
 protocol AddListProtocol {
-    func setupViews()
+    func layout()
     func dismiss()
     func postNotification()
     func addList()
@@ -22,7 +22,7 @@ final class AddListPresenter: NSObject {
     }
     
     func viewDidLoad() {
-        viewController.setupViews()
+        viewController.layout()
     }
     
     func leftBarButtonTapped() {

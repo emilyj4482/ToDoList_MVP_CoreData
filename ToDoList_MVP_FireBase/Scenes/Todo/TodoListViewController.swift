@@ -118,6 +118,7 @@ private extension TodoListViewController {
     }
     
     @objc func addTaskButtonTapped() {
+        present(TaskEditViewController(), animated: true)
         print("add btn tapped")
     }
 }

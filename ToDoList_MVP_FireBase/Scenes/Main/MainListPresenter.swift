@@ -9,7 +9,7 @@ import UIKit
 
 protocol MainListProtocol {
     func setupNavigationBar()
-    func setupViews()
+    func layout()
     func fetchData()
     func goToTodoListView(index: Int)
     func observeNotification()
@@ -25,7 +25,7 @@ final class MainListPresenter: NSObject {
     
     func viewDidLoad() {
         viewController.setupNavigationBar()
-        viewController.setupViews()
+        viewController.layout()
         viewController.fetchData()
         viewController.observeNotification()
     }

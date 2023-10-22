@@ -47,7 +47,7 @@ final class AddListViewController: UIViewController {
 }
 
 extension AddListViewController: AddListProtocol {
-    func setupViews() {
+    func layout() {
         view.backgroundColor = .systemBackground
         
         navigationItem.leftBarButtonItem = leftBarButtonItem

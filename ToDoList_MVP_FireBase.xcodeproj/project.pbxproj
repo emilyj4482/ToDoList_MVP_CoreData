@@ -8,6 +8,8 @@
 
 /* Begin PBXBuildFile section */
 		A14C26DA2AD9C906006F7816 /* ListCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A14C26D92AD9C906006F7816 /* ListCell.swift */; };
+		A17FFBEB2AE51B80006892C3 /* TaskEditViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A17FFBEA2AE51B80006892C3 /* TaskEditViewController.swift */; };
+		A17FFBEE2AE51B92006892C3 /* TaskEditPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = A17FFBED2AE51B92006892C3 /* TaskEditPresenter.swift */; };
 		A182C5CD2ADC69F00044CFA5 /* MainTintColor.swift in Sources */ = {isa = PBXBuildFile; fileRef = A182C5CC2ADC69F00044CFA5 /* MainTintColor.swift */; };
 		A1A6AF3D2ADE98B100181093 /* FirebaseAnalytics in Frameworks */ = {isa = PBXBuildFile; productRef = A1A6AF3C2ADE98B100181093 /* FirebaseAnalytics */; };
 		A1A6AF3F2ADE98B100181093 /* FirebaseAnalyticsSwift in Frameworks */ = {isa = PBXBuildFile; productRef = A1A6AF3E2ADE98B100181093 /* FirebaseAnalyticsSwift */; };
@@ -34,6 +36,8 @@
 
 /* Begin PBXFileReference section */
 		A14C26D92AD9C906006F7816 /* ListCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ListCell.swift; sourceTree = "<group>"; };
+		A17FFBEA2AE51B80006892C3 /* TaskEditViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TaskEditViewController.swift; sourceTree = "<group>"; };
+		A17FFBED2AE51B92006892C3 /* TaskEditPresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TaskEditPresenter.swift; sourceTree = "<group>"; };
 		A182C5CC2ADC69F00044CFA5 /* MainTintColor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainTintColor.swift; sourceTree = "<group>"; };
 		A1A6AF442ADE98E300181093 /* TodoManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TodoManager.swift; sourceTree = "<group>"; };
 		A1A6AF472ADECAD800181093 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
@@ -71,6 +75,15 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		A17FFBEC2AE51B85006892C3 /* Edit */ = {
+			isa = PBXGroup;
+			children = (
+				A17FFBEA2AE51B80006892C3 /* TaskEditViewController.swift */,
+				A17FFBED2AE51B92006892C3 /* TaskEditPresenter.swift */,
+			);
+			path = Edit;
+			sourceTree = "<group>";
+		};
 		A182C5CE2ADC69F40044CFA5 /* Extension */ = {
 			isa = PBXGroup;
 			children = (
@@ -137,6 +150,7 @@
 				A1CF4ABE2AD9B4E600C6E34C /* Main */,
 				A1E1DB522ADC7BE8007D46FD /* Add */,
 				A1E1DB552ADC7C09007D46FD /* Todo */,
+				A17FFBEC2AE51B85006892C3 /* Edit */,
 			);
 			path = Scenes;
 			sourceTree = "<group>";
@@ -257,6 +271,7 @@
 				A1E1DB592ADC7C46007D46FD /* TodoListPresenter.swift in Sources */,
 				A1CF4AAA2AD9B44F00C6E34C /* AppDelegate.swift in Sources */,
 				A1E1DB572ADC7C3C007D46FD /* AddListPresenter.swift in Sources */,
+				A17FFBEB2AE51B80006892C3 /* TaskEditViewController.swift in Sources */,
 				A1A7B1D52ADD9B1000F9214A /* List.swift in Sources */,
 				A1E1DB512ADC7BE3007D46FD /* AddListViewController.swift in Sources */,
 				A1CF4AAC2AD9B44F00C6E34C /* SceneDelegate.swift in Sources */,
@@ -266,6 +281,7 @@
 				A182C5CD2ADC69F00044CFA5 /* MainTintColor.swift in Sources */,
 				A14C26DA2AD9C906006F7816 /* ListCell.swift in Sources */,
 				A1CF4AC02AD9B4F700C6E34C /* MainListPresenter.swift in Sources */,
+				A17FFBEE2AE51B92006892C3 /* TaskEditPresenter.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -74,7 +74,7 @@ extension MainListViewController: MainListProtocol {
         navigationController?.navigationBar.prefersLargeTitles = true
     }
     
-    func setupViews() {
+    func layout() {
         
         [collectionView, countLabel, addListButton]
             .forEach {
