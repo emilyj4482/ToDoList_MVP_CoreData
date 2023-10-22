@@ -58,6 +58,10 @@ final class TodoListViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         presenter.viewDidLoad()
+        
+        
+        print(tm.list)
+        print(type(of: tm.list?.tasks))
     }
 }
 
@@ -66,7 +70,7 @@ extension TodoListViewController: TodoListProtocol {
         navigationItem.title = tm.list?.name
     }
     
-    func setupViews() {
+    func layout() {
         view.backgroundColor = .systemBackground
         navigationController?.navigationBar.tintColor = .mainTintColor
         navigationItem.rightBarButtonItem = rightBarButtonItem
@@ -89,6 +93,10 @@ extension TodoListViewController: TodoListProtocol {
             addTaskButton.leadingAnchor.constraint(equalTo: collectionView.leadingAnchor, constant: inset),
             addTaskButton.bottomAnchor.constraint(equalTo: superview.bottomAnchor, constant: -inset)
         ])
+    }
+    
+    func observeNotification() {
+        NotificationCenter.default.addObserver(self, selector: #selector(reload), name: Notification.reloadMainView, object: nil)
     }
 }
 
@@ -120,5 +128,9 @@ private extension TodoListViewController {
     @objc func addTaskButtonTapped() {
         present(TaskEditViewController(), animated: true)
         print("add btn tapped")
+    }
+    
+    @objc func reload() {
+        collectionView.reloadData()
     }
 }

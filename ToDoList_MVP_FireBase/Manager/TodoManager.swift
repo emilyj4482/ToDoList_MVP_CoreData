@@ -43,4 +43,22 @@ final class TodoManager {
         }
         saveData()
     }
+    
+    private func createTask(_ title: String, listId: Int) -> Task {
+        return Task(listId: listId, title: title, isDone: false, isImportant: false)
+    }
+    
+    func addTask(_ title: String) {
+        if var list = list,
+//            var tasks = list.tasks,
+           let index = lists.firstIndex(where: { $0.id == list.id }) {
+            let task = Task(listId: list.id, title: title, isDone: false, isImportant: false)
+            
+            // tasks.append(task)
+            // lists[index].tasks = tasks
+            // list.tasks = tasks
+
+            print(lists[index].tasks)
+        }
+    }
 }

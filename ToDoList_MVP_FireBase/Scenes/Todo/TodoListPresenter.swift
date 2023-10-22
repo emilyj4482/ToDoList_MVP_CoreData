@@ -9,7 +9,8 @@ import UIKit
 
 protocol TodoListProtocol {
     func setTitle()
-    func setupViews()
+    func layout()
+    func observeNotification()
 }
 
 final class TodoListPresenter: NSObject {
@@ -22,21 +23,21 @@ final class TodoListPresenter: NSObject {
     
     func viewDidLoad() {
         viewController.setTitle()
-        viewController.setupViews()
+        viewController.layout()
+        viewController.observeNotification()
     }
 }
 
 extension TodoListPresenter: UICollectionViewDataSource {
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        // temporarily return 1
-        return tm.list?.tasks?.count ?? 1
+        return tm.list?.tasks?.count ?? 0
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: TaskCell.identifier, for: indexPath) as? TaskCell else { return UICollectionViewCell() }
-        
-        // temporary data
-        let task = Task(listId: 2, title: "to study", isDone: true, isImportant: false)
+        guard
+            let cell = collectionView.dequeueReusableCell(withReuseIdentifier: TaskCell.identifier, for: indexPath) as? TaskCell,
+            let task = tm.list?.tasks?[indexPath.item]
+        else { return UICollectionViewCell() }
         
         cell.configure(task: task, superview: cell)
         

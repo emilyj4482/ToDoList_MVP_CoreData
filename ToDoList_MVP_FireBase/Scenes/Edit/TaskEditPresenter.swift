@@ -9,7 +9,8 @@ import UIKit
 
 protocol TaskEditProtocol {
     func configure()
-    func dismiss()
+    func addTask()
+    func postNotification()
 }
 
 final class TaskEditPresenter: NSObject {
@@ -24,6 +25,7 @@ final class TaskEditPresenter: NSObject {
     }
     
     func doneButtonTapped() {
-        viewController.dismiss()
+        viewController.addTask()
+        viewController.postNotification()
     }
 }

@@ -82,8 +82,16 @@ extension TaskEditViewController: TaskEditProtocol {
         doneImage.tintColor = .red
     }
     
-    func dismiss() {
-        dismiss(animated: true)
+    func addTask() {
+        guard var newTaskTitle = textField.text?.trim() else { return }
+        if !newTaskTitle.isEmpty {
+            tm.addTask(newTaskTitle)
+            dismiss(animated: true)
+        }
+    }
+    
+    func postNotification() {
+        NotificationCenter.default.post(name: Notification.reloadMainView, object: nil)
     }
 }
 
