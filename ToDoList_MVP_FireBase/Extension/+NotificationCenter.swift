@@ -9,4 +9,5 @@ import Foundation
 
 extension Notification {
     static let reloadMainView = Notification.Name("reloadMainView")
+    static let reloadTodoView = Notification.Name("reloadTodoView")
 }

@@ -13,17 +13,16 @@ final class TodoManager {
     static let shared = TodoManager()
     
     var lastListId: Int = 1     // List.id 저장용 프로퍼티
-    var lists: [List] = []
-    var list: List?
-    
-    private let db = Database.database().reference()
-    
-    init() {
-        print("test init")
-        if list != nil && list?.tasks == nil {
-            // tasks에 [] 주입
+    var lists: [List] = []      // single source of truth
+    var list: List? {           // main에서 todo view로 넘어갈 때 단일 list 정보 전달 받는 프로퍼티
+        didSet {                // [Task]? 옵셔널 바인딩 후 collection view reload용 변수에 전달
+            guard let tasks = list?.tasks else { return }
+            self.tasks = tasks
         }
     }
+    var tasks: [Task] = []      // todo view에서 collection view를 구성하기 위한 data 저장용 프로퍼티
+    
+    private let db = Database.database().reference()
     
     // firebase realtime database에 저장
     private func saveData() {
@@ -56,17 +55,21 @@ final class TodoManager {
     }
     
     func addTask(_ title: String) {
-        if var list = list,
+        if let list = list,
            let index = lists.firstIndex(where: { $0.id == list.id }) {
-            let task = Task(listId: list.id, title: title, isDone: false, isImportant: false)
+            
+            let task = createTask(title, listId: list.id)
+            
+            // List model에서 tasks 프로퍼티가 옵셔널이므로, nil일 경우 append가 먹지 않아 array로 주입 필요
             if lists[index].tasks == nil {
                 lists[index].tasks = [task]
-                list.tasks = [task]
             } else {
                 lists[index].tasks?.append(task)
-                list.tasks?.append(task)
             }
-            print(lists[index].tasks)
+            
+            // view reload
+            tasks.append(task)
         }
+        saveData()
     }
 }

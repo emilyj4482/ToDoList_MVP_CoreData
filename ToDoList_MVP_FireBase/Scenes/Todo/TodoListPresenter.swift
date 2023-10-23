@@ -30,15 +30,13 @@ final class TodoListPresenter: NSObject {
 
 extension TodoListPresenter: UICollectionViewDataSource {
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return tm.list?.tasks?.count ?? 0
+        return tm.tasks.count
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        guard
-            let cell = collectionView.dequeueReusableCell(withReuseIdentifier: TaskCell.identifier, for: indexPath) as? TaskCell,
-            let task = tm.list?.tasks?[indexPath.item]
-        else { return UICollectionViewCell() }
-        
+        guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: TaskCell.identifier, for: indexPath) as? TaskCell else { return UICollectionViewCell() }
+
+        let task = tm.tasks[indexPath.item]
         cell.configure(task: task, superview: cell)
         
         return cell

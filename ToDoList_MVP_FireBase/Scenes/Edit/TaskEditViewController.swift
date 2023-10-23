@@ -83,7 +83,7 @@ extension TaskEditViewController: TaskEditProtocol {
     }
     
     func addTask() {
-        guard var newTaskTitle = textField.text?.trim() else { return }
+        guard let newTaskTitle = textField.text?.trim() else { return }
         if !newTaskTitle.isEmpty {
             tm.addTask(newTaskTitle)
             dismiss(animated: true)
@@ -91,6 +91,7 @@ extension TaskEditViewController: TaskEditProtocol {
     }
     
     func postNotification() {
+        NotificationCenter.default.post(name: Notification.reloadTodoView, object: nil)
         NotificationCenter.default.post(name: Notification.reloadMainView, object: nil)
     }
 }
@@ -98,6 +99,5 @@ extension TaskEditViewController: TaskEditProtocol {
 private extension TaskEditViewController {
     @objc func doneButtonTapped() {
         presenter.doneButtonTapped()
-        print("Done btn tapped")
     }
 }

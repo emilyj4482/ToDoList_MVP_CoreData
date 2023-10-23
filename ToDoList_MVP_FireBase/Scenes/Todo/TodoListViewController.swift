@@ -58,10 +58,6 @@ final class TodoListViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         presenter.viewDidLoad()
-        
-        
-        print(tm.list)
-        print(type(of: tm.list?.tasks))
     }
 }
 
@@ -96,7 +92,7 @@ extension TodoListViewController: TodoListProtocol {
     }
     
     func observeNotification() {
-        NotificationCenter.default.addObserver(self, selector: #selector(reload), name: Notification.reloadMainView, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(reload), name: Notification.reloadTodoView, object: nil)
     }
 }
 
@@ -127,7 +123,6 @@ private extension TodoListViewController {
     
     @objc func addTaskButtonTapped() {
         present(TaskEditViewController(), animated: true)
-        print("add btn tapped")
     }
     
     @objc func reload() {
