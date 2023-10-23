@@ -9,6 +9,8 @@ import UIKit
 
 final class TodoListViewController: UIViewController {
     
+    let tm = TodoManager.shared
+    
     private lazy var presenter = TodoListPresenter(viewController: self)
     
     private lazy var collectionView: UICollectionView = {
@@ -61,10 +63,10 @@ final class TodoListViewController: UIViewController {
 
 extension TodoListViewController: TodoListProtocol {
     func setTitle() {
-        navigationItem.title = "Untitled list"
+        navigationItem.title = tm.list?.name
     }
     
-    func setupViews() {
+    func layout() {
         view.backgroundColor = .systemBackground
         navigationController?.navigationBar.tintColor = .mainTintColor
         navigationItem.rightBarButtonItem = rightBarButtonItem
@@ -88,14 +90,42 @@ extension TodoListViewController: TodoListProtocol {
             addTaskButton.bottomAnchor.constraint(equalTo: superview.bottomAnchor, constant: -inset)
         ])
     }
+    
+    func observeNotification() {
+        NotificationCenter.default.addObserver(self, selector: #selector(reload), name: Notification.reloadTodoView, object: nil)
+    }
 }
 
 private extension TodoListViewController {
     @objc func rightBarButtonTapped() {
-        print("edit btn tapped")
+        // textfield를 가진 alert 창을 띄워 list 이름 수정 기능 제공
+        let editAlert = UIAlertController(title: "Type your new list name down below.", message: "", preferredStyle: .alert)
+        let btnCancel = UIAlertAction(title: "Cancel", style: .cancel)
+        let btnDone = UIAlertAction(title: "Done", style: .default) { [unowned self] _ in
+            guard let text = editAlert.textFields?[0].text?.trim() else { return }
+            
+            if !text.isEmpty {
+                tm.updateList(text)
+                // view title 및 main view reload
+                navigationItem.title = text
+                NotificationCenter.default.post(name: Notification.reloadMainView, object: nil)
+            }
+        }
+        
+        editAlert.addTextField { tf in
+            tf.placeholder = self.tm.list?.name ?? ""
+        }
+        editAlert.addAction(btnCancel)
+        editAlert.addAction(btnDone)
+        
+        present(editAlert, animated: true)
     }
     
     @objc func addTaskButtonTapped() {
-        print("add btn tapped")
+        present(TaskEditViewController(), animated: true)
+    }
+    
+    @objc func reload() {
+        collectionView.reloadData()
     }
 }

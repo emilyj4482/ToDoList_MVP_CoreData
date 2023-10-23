@@ -9,9 +9,9 @@ import UIKit
 
 protocol MainListProtocol {
     func setupNavigationBar()
-    func setupViews()
+    func layout()
     func fetchData()
-    func goToTodoListView()
+    func goToTodoListView(index: Int)
     func observeNotification()
 }
 
@@ -25,7 +25,7 @@ final class MainListPresenter: NSObject {
     
     func viewDidLoad() {
         viewController.setupNavigationBar()
-        viewController.setupViews()
+        viewController.layout()
         viewController.fetchData()
         viewController.observeNotification()
     }
@@ -50,6 +50,6 @@ extension MainListPresenter: UICollectionViewDataSource {
 
 extension MainListPresenter: UICollectionViewDelegate {
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        viewController.goToTodoListView()
+        viewController.goToTodoListView(index: indexPath.item)
     }
 }

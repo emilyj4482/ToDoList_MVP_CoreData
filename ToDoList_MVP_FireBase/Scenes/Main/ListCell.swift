@@ -19,18 +19,13 @@ final class ListCell: UICollectionViewCell {
     }()
     
     private lazy var listNameLabel: UILabel = {
-        
         let label = UILabel()
-        
-        label.text = "Untitled list"
-        
         return label
     }()
     
     private lazy var taskCountLabel: UILabel = {
         let label = UILabel()
-        
-        label.text = "10"
+
         label.font = .systemFont(ofSize: 10.0, weight: .light)
         label.textColor = .gray
         
@@ -43,8 +38,6 @@ final class ListCell: UICollectionViewCell {
                 addSubview($0)
                 $0.translatesAutoresizingMaskIntoConstraints = false
             }
-                
-        guard let superview = listNameLabel.superview else { return }
         
         NSLayoutConstraint.activate([
             listIcon.centerYAnchor.constraint(equalTo: superview.centerYAnchor),

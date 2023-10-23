@@ -47,7 +47,7 @@ final class AddListViewController: UIViewController {
 }
 
 extension AddListViewController: AddListProtocol {
-    func setupViews() {
+    func layout() {
         view.backgroundColor = .systemBackground
         
         navigationItem.leftBarButtonItem = leftBarButtonItem
@@ -71,7 +71,7 @@ extension AddListViewController: AddListProtocol {
     }
     
     func postNotification() {
-        NotificationCenter.default.post(name: Notification.modalDismissed, object: nil)
+        NotificationCenter.default.post(name: Notification.reloadMainView, object: nil)
     }
     
     // list name 중복검사

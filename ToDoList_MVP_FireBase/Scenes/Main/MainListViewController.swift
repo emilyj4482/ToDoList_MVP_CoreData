@@ -74,7 +74,7 @@ extension MainListViewController: MainListProtocol {
         navigationController?.navigationBar.prefersLargeTitles = true
     }
     
-    func setupViews() {
+    func layout() {
         
         [collectionView, countLabel, addListButton]
             .forEach {
@@ -123,12 +123,13 @@ extension MainListViewController: MainListProtocol {
         }
     }
     
-    func goToTodoListView() {
+    func goToTodoListView(index: Int) {
+        tm.list = tm.lists[index]
         navigationController?.pushViewController(TodoListViewController(), animated: true)
     }
     
     func observeNotification() {
-        NotificationCenter.default.addObserver(self, selector: #selector(reload), name: Notification.modalDismissed, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(reload), name: Notification.reloadMainView, object: nil)
     }
 }
 
