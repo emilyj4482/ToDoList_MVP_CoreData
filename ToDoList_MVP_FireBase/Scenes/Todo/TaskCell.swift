@@ -8,7 +8,12 @@
 import UIKit
 
 final class TaskCell: UICollectionViewCell {
+    
     static let identifier = "TaskCell"
+    
+    // data update : handler를 통해 bool 값 전송하여 presenter에서 처리
+    var doneButtonTapHandler: ((Bool) -> Void)?
+    var starButtonTapHandler: ((Bool) -> Void)?
     
     private lazy var doneButton: UIButton = {
         let button = UIButton()
@@ -62,6 +67,19 @@ final class TaskCell: UICollectionViewCell {
         doneButton.isSelected = task.isDone ? true : false
         doneButton.tintColor = doneButton.isSelected ? .green : .red
         starButton.isSelected = task.isImportant ? true : false
+        
+        strikethrough(isDone: task.isDone)
+    }
+    
+    // isDone 상태에 따라 task title label 취소선, 흐리게 처리
+    private func strikethrough(isDone: Bool) {
+        if isDone {
+            taskTitleLabel.attributedText = NSAttributedString(string: taskTitleLabel.text!, attributes: [.strikethroughStyle: NSUnderlineStyle.single.rawValue])
+            taskTitleLabel.alpha = 0.5
+        } else {
+            taskTitleLabel.attributedText = NSAttributedString(string: taskTitleLabel.text!, attributes: [.strikethroughStyle: NSUnderlineStyle()])
+            taskTitleLabel.alpha = 1
+        }
     }
 }
 
@@ -69,6 +87,8 @@ private extension TaskCell {
     @objc func doneButtonTapped() {
         doneButton.isSelected.toggle()
         doneButton.tintColor = doneButton.isSelected ? .green : .red
+        strikethrough(isDone: doneButton.isSelected)
+        doneButtonTapHandler?(doneButton.isSelected)
     }
     
     @objc func starButtonTapped() {

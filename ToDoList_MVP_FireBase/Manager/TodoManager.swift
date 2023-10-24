@@ -72,4 +72,25 @@ final class TodoManager {
         }
         saveData()
     }
+    
+    private func updateSingleTask(listId: Int, taskId: String, task: Task) {
+        if let index1 = lists.firstIndex(where: { $0.id == listId }),
+           let index2 = lists[index1].tasks?.firstIndex(where: { $0.id == taskId }) {
+            lists[index1].tasks?[index2].update(title: task.title, isDone: task.isDone, isImportant: task.isImportant)
+        }
+    }
+    
+    // important task인 경우 Important list와 속한 list 양쪽에서 업데이트 필요
+    func updateTask(_ task: Task) {
+        if task.isImportant {
+            updateSingleTask(listId: 1, taskId: task.id, task: task)
+        }
+        updateSingleTask(listId: task.listId, taskId: task.id, task: task)
+        
+        // view reload
+        if let index = tasks.firstIndex(where: { $0.id == task.id }) {
+            tasks[index].update(title: task.title, isDone: task.isDone, isImportant: task.isImportant)
+        }
+        saveData()
+    }
 }
