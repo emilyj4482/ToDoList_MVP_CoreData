@@ -93,5 +93,10 @@ private extension TaskCell {
     
     @objc func starButtonTapped() {
         starButton.isSelected.toggle()
+        starButtonTapHandler?(starButton.isSelected)
+        // main에서 important list count label update
+        NotificationCenter.default.post(name: Notification.reloadMainView, object: nil)
+        // important list에서 task 제거 시 view reload
+        NotificationCenter.default.post(name: Notification.reloadTodoView, object: nil)
     }
 }

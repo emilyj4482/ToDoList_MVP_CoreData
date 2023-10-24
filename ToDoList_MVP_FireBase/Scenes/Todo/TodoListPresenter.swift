@@ -45,6 +45,11 @@ extension TodoListPresenter: UICollectionViewDataSource {
             self.tm.updateTask(task)
         }
         
+        cell.starButtonTapHandler = { isImportant in
+            task.isImportant = isImportant
+            self.tm.updateImportant(task)
+        }
+        
         return cell
     }
 }

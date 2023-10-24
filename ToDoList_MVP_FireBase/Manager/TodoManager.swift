@@ -80,6 +80,12 @@ final class TodoManager {
         }
     }
     
+    private func reloadViewWhenTaskUpdated(_ task: Task) {
+        if let index = tasks.firstIndex(where: { $0.id == task.id }) {
+            tasks[index].update(title: task.title, isDone: task.isDone, isImportant: task.isImportant)
+        }
+    }
+    
     // important task인 경우 Important list와 속한 list 양쪽에서 업데이트 필요
     func updateTask(_ task: Task) {
         if task.isImportant {
@@ -88,9 +94,27 @@ final class TodoManager {
         updateSingleTask(listId: task.listId, taskId: task.id, task: task)
         
         // view reload
-        if let index = tasks.firstIndex(where: { $0.id == task.id }) {
-            tasks[index].update(title: task.title, isDone: task.isDone, isImportant: task.isImportant)
+        reloadViewWhenTaskUpdated(task)
+        saveData()
+    }
+    
+    // isImportant update : Important list로의 추가/삭제 함께 동작 필요
+    func updateImportant(_ task: Task) {
+        if task.isImportant && lists[0].tasks == nil {
+            lists[0].tasks = [task]
+        } else if task.isImportant && lists[0].tasks != nil {
+            lists[0].tasks?.append(task)
+        } else if !task.isImportant {
+            if let index = lists[0].tasks?.firstIndex(where: { $0.id == task.id }) {
+                lists[0].tasks?.remove(at: index)
+                // view reload
+                tasks.remove(at: index)
+            }
         }
+        updateSingleTask(listId: task.listId, taskId: task.id, task: task)
+        
+        // view reload
+        reloadViewWhenTaskUpdated(task)
         saveData()
     }
 }
