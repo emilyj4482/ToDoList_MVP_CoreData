@@ -59,6 +59,11 @@ final class TodoListViewController: UIViewController {
         super.viewDidLoad()
         presenter.viewDidLoad()
     }
+    
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        presenter.viewWillDisappear()
+    }
 }
 
 extension TodoListViewController: TodoListProtocol {

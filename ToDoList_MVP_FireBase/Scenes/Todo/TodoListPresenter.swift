@@ -26,6 +26,11 @@ final class TodoListPresenter: NSObject {
         viewController.layout()
         viewController.observeNotification()
     }
+    
+    func viewWillDisappear() {
+        // 빈 list에 들어갈 때 task가 있었던 list의 view가 그대로 남는 현상 방지 : view와 연결된 프로퍼티 초기화
+        tm.tasks = []
+    }
 }
 
 extension TodoListPresenter: UICollectionViewDataSource {
