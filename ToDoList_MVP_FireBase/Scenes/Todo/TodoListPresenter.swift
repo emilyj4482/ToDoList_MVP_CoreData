@@ -36,8 +36,19 @@ extension TodoListPresenter: UICollectionViewDataSource {
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: TaskCell.identifier, for: indexPath) as? TaskCell else { return UICollectionViewCell() }
 
-        let task = tm.tasks[indexPath.item]
+        var task = tm.tasks[indexPath.item]
         cell.configure(task: task, superview: cell)
+        
+        // handler : done & star button tap에 따른 data update
+        cell.doneButtonTapHandler = { isDone in
+            task.isDone = isDone
+            self.tm.updateTask(task)
+        }
+        
+        cell.starButtonTapHandler = { isImportant in
+            task.isImportant = isImportant
+            self.tm.updateImportant(task)
+        }
         
         return cell
     }
