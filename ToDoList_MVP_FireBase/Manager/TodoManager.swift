@@ -107,8 +107,10 @@ final class TodoManager {
         } else if !task.isImportant {
             if let index = lists[0].tasks?.firstIndex(where: { $0.id == task.id }) {
                 lists[0].tasks?.remove(at: index)
-                // view reload
-                tasks.remove(at: index)
+                // 현재 view가 Important list일 경우 view reload
+                if list?.id == 1 {
+                    tasks.remove(at: index)
+                }
             }
         }
         updateSingleTask(listId: task.listId, taskId: task.id, task: task)

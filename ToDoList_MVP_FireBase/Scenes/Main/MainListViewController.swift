@@ -14,29 +14,26 @@ final class MainListViewController: UIViewController {
     let db = Database.database().reference()
     
     private lazy var presenter = MainListPresenter(viewController: self)
-    
-    private lazy var collectionView: UICollectionView = {
+
+    private lazy var tableView: UITableView = {
+        let tableView = UITableView(frame: .zero)
         
-        // layout
-        let layout = UICollectionViewFlowLayout()
+        // row 높이 지정
+        tableView.rowHeight = 50
         
-        let inset: CGFloat = 16.0
-        
-        layout.estimatedItemSize = CGSize(width: view.frame.width - (inset * 2), height: 40.0)
-        layout.sectionInset = UIEdgeInsets(top: inset, left: inset, bottom: inset, right: inset)
-        
-        let collectionView = UICollectionView(frame: .zero, collectionViewLayout: layout)
+        // row 구분선 제거
+        tableView.separatorStyle = .none
         
         // data source
-        collectionView.dataSource = presenter
+        tableView.dataSource = presenter
         
         // delegate
-        collectionView.delegate = presenter
+        tableView.delegate = presenter
         
         // cell
-        collectionView.register(ListCell.self, forCellWithReuseIdentifier: ListCell.identifier)
+        tableView.register(ListCell.self, forCellReuseIdentifier: ListCell.identifier)
         
-        return collectionView
+        return tableView
     }()
     
     private lazy var countLabel: UILabel = {
@@ -76,7 +73,7 @@ extension MainListViewController: MainListProtocol {
     
     func layout() {
         
-        [collectionView, countLabel, addListButton]
+        [tableView, countLabel, addListButton]
             .forEach {
                 view.addSubview($0)
                 $0.translatesAutoresizingMaskIntoConstraints = false
@@ -86,12 +83,12 @@ extension MainListViewController: MainListProtocol {
         let inset: CGFloat = 16.0
         
         NSLayoutConstraint.activate([
-            collectionView.topAnchor.constraint(equalTo: superview.topAnchor),
-            collectionView.leadingAnchor.constraint(equalTo: superview.leadingAnchor),
-            collectionView.trailingAnchor.constraint(equalTo: superview.trailingAnchor),
+            tableView.topAnchor.constraint(equalTo: superview.topAnchor, constant: 5.0),
+            tableView.leadingAnchor.constraint(equalTo: superview.leadingAnchor),
+            tableView.trailingAnchor.constraint(equalTo: superview.trailingAnchor),
             
-            countLabel.topAnchor.constraint(equalTo: collectionView.bottomAnchor),
-            countLabel.leadingAnchor.constraint(equalTo: collectionView.leadingAnchor, constant: inset),
+            countLabel.topAnchor.constraint(equalTo: tableView.bottomAnchor),
+            countLabel.leadingAnchor.constraint(equalTo: superview.leadingAnchor, constant: inset),
             
             addListButton.topAnchor.constraint(equalTo: countLabel.bottomAnchor, constant: inset),
             addListButton.leadingAnchor.constraint(equalTo: countLabel.leadingAnchor),
@@ -140,6 +137,6 @@ private extension MainListViewController {
     }
     
     @objc func reload() {
-        collectionView.reloadData()
+        tableView.reloadData()
     }
 }

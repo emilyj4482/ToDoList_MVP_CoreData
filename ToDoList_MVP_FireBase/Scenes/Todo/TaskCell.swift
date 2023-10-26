@@ -7,7 +7,7 @@
 
 import UIKit
 
-final class TaskCell: UICollectionViewCell {
+final class TaskCell: UITableViewCell {
     
     static let identifier = "TaskCell"
     
@@ -41,27 +41,32 @@ final class TaskCell: UICollectionViewCell {
         return button
     }()
     
-    private func layout(_ superview: UICollectionViewCell) {
+    private func layout(_ superview: UITableViewCell) {
         [doneButton, taskTitleLabel, starButton]
             .forEach {
-                addSubview($0)
+                contentView.addSubview($0)
                 $0.translatesAutoresizingMaskIntoConstraints = false
             }
         
+        let inset: CGFloat = 16.0
+        
         NSLayoutConstraint.activate([
             doneButton.centerYAnchor.constraint(equalTo: superview.centerYAnchor),
-            doneButton.leadingAnchor.constraint(equalTo: superview.leadingAnchor),
+            doneButton.leadingAnchor.constraint(equalTo: superview.leadingAnchor, constant: inset),
             
             taskTitleLabel.centerYAnchor.constraint(equalTo: doneButton.centerYAnchor),
             taskTitleLabel.leadingAnchor.constraint(equalTo: doneButton.trailingAnchor, constant: 10.0),
             
             starButton.centerYAnchor.constraint(equalTo: taskTitleLabel.centerYAnchor),
-            starButton.trailingAnchor.constraint(equalTo: superview.trailingAnchor)
+            starButton.trailingAnchor.constraint(equalTo: superview.trailingAnchor, constant: -inset)
         ])
     }
     
-    func configure(task: Task, superview cell: UICollectionViewCell) {
+    func configure(task: Task, superview cell: UITableViewCell) {
         layout(cell)
+        
+        // cell tap 시 배경색 회색되지 않게
+        cell.selectionStyle = .none
         
         taskTitleLabel.text = task.title
         doneButton.isSelected = task.isDone ? true : false

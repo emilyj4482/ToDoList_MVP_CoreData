@@ -8,7 +8,7 @@
 import UIKit
 
 protocol TodoListProtocol {
-    func setTitle()
+    func setupNavigationBar()
     func layout()
     func observeNotification()
 }
@@ -22,19 +22,24 @@ final class TodoListPresenter: NSObject {
     }
     
     func viewDidLoad() {
-        viewController.setTitle()
+        viewController.setupNavigationBar()
         viewController.layout()
         viewController.observeNotification()
     }
+    
+    func viewWillDisappear() {
+        // 빈 list에 들어갈 때 task가 있었던 list의 view가 그대로 남는 현상 방지 : view와 연결된 프로퍼티 초기화
+        tm.tasks = []
+    }
 }
 
-extension TodoListPresenter: UICollectionViewDataSource {
-    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+extension TodoListPresenter: UITableViewDataSource {
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return tm.tasks.count
     }
     
-    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: TaskCell.identifier, for: indexPath) as? TaskCell else { return UICollectionViewCell() }
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        guard let cell = tableView.dequeueReusableCell(withIdentifier: TaskCell.identifier, for: indexPath) as? TaskCell else { return UITableViewCell() }
 
         var task = tm.tasks[indexPath.item]
         cell.configure(task: task, superview: cell)
@@ -54,6 +59,6 @@ extension TodoListPresenter: UICollectionViewDataSource {
     }
 }
 
-extension TodoListPresenter: UICollectionViewDelegate {
+extension TodoListPresenter: UITableViewDelegate {
     
 }
