@@ -39,15 +39,17 @@ final class ListCell: UITableViewCell {
                 $0.translatesAutoresizingMaskIntoConstraints = false
             }
         
+        let inset: CGFloat = 16.0
+        
         NSLayoutConstraint.activate([
             listIcon.centerYAnchor.constraint(equalTo: superview.centerYAnchor),
-            listIcon.leadingAnchor.constraint(equalTo: superview.leadingAnchor),
+            listIcon.leadingAnchor.constraint(equalTo: superview.leadingAnchor, constant: inset),
             
             listNameLabel.centerYAnchor.constraint(equalTo: listIcon.centerYAnchor),
             listNameLabel.leadingAnchor.constraint(equalTo: listIcon.trailingAnchor, constant: 10.0),
             
             taskCountLabel.centerYAnchor.constraint(equalTo: listNameLabel.centerYAnchor),
-            taskCountLabel.trailingAnchor.constraint(equalTo: superview.trailingAnchor, constant: -5.0)
+            taskCountLabel.trailingAnchor.constraint(equalTo: superview.trailingAnchor, constant: -inset)
         ])
     }
     

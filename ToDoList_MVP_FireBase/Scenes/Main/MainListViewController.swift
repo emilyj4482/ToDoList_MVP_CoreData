@@ -84,11 +84,11 @@ extension MainListViewController: MainListProtocol {
         
         NSLayoutConstraint.activate([
             tableView.topAnchor.constraint(equalTo: superview.topAnchor, constant: 5.0),
-            tableView.leadingAnchor.constraint(equalTo: superview.leadingAnchor, constant: inset),
-            tableView.trailingAnchor.constraint(equalTo: superview.trailingAnchor, constant: -inset),
+            tableView.leadingAnchor.constraint(equalTo: superview.leadingAnchor),
+            tableView.trailingAnchor.constraint(equalTo: superview.trailingAnchor),
             
             countLabel.topAnchor.constraint(equalTo: tableView.bottomAnchor),
-            countLabel.leadingAnchor.constraint(equalTo: tableView.leadingAnchor),
+            countLabel.leadingAnchor.constraint(equalTo: superview.leadingAnchor, constant: inset),
             
             addListButton.topAnchor.constraint(equalTo: countLabel.bottomAnchor, constant: inset),
             addListButton.leadingAnchor.constraint(equalTo: countLabel.leadingAnchor),

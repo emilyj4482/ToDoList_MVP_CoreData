@@ -48,15 +48,17 @@ final class TaskCell: UITableViewCell {
                 $0.translatesAutoresizingMaskIntoConstraints = false
             }
         
+        let inset: CGFloat = 16.0
+        
         NSLayoutConstraint.activate([
             doneButton.centerYAnchor.constraint(equalTo: superview.centerYAnchor),
-            doneButton.leadingAnchor.constraint(equalTo: superview.leadingAnchor),
+            doneButton.leadingAnchor.constraint(equalTo: superview.leadingAnchor, constant: inset),
             
             taskTitleLabel.centerYAnchor.constraint(equalTo: doneButton.centerYAnchor),
             taskTitleLabel.leadingAnchor.constraint(equalTo: doneButton.trailingAnchor, constant: 10.0),
             
             starButton.centerYAnchor.constraint(equalTo: taskTitleLabel.centerYAnchor),
-            starButton.trailingAnchor.constraint(equalTo: superview.trailingAnchor)
+            starButton.trailingAnchor.constraint(equalTo: superview.trailingAnchor, constant: -inset)
         ])
     }
     

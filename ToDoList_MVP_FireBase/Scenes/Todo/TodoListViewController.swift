@@ -85,8 +85,8 @@ extension TodoListViewController: TodoListProtocol {
         
         NSLayoutConstraint.activate([
             tableView.topAnchor.constraint(equalTo: superview.topAnchor, constant: 5.0),
-            tableView.leadingAnchor.constraint(equalTo: superview.leadingAnchor, constant: inset),
-            tableView.trailingAnchor.constraint(equalTo: superview.trailingAnchor, constant: -inset),
+            tableView.leadingAnchor.constraint(equalTo: superview.leadingAnchor),
+            tableView.trailingAnchor.constraint(equalTo: superview.trailingAnchor),
             
             addTaskButton.topAnchor.constraint(equalTo: tableView.bottomAnchor, constant: inset),
             addTaskButton.leadingAnchor.constraint(equalTo: tableView.leadingAnchor),
