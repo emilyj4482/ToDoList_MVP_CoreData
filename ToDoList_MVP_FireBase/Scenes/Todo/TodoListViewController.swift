@@ -12,28 +12,26 @@ final class TodoListViewController: UIViewController {
     let tm = TodoManager.shared
     
     private lazy var presenter = TodoListPresenter(viewController: self)
-    
-    private lazy var collectionView: UICollectionView = {
-        // layout
-        let layout = UICollectionViewFlowLayout()
+
+    private lazy var tableView: UITableView = {
+        let tableView = UITableView(frame: .zero)
         
-        let inset: CGFloat = 16.0
+        // row 높이 지정
+        tableView.rowHeight = 50
         
-        layout.estimatedItemSize = CGSize(width: view.frame.width - (inset * 2), height: 40.0)
-        layout.sectionInset = UIEdgeInsets(top: inset, left: inset, bottom: inset, right: inset)
-        
-        let collectionView = UICollectionView(frame: .zero, collectionViewLayout: layout)
+        // row 구분선 제거
+        tableView.separatorStyle = .none
         
         // data source
-        collectionView.dataSource = presenter
+        tableView.dataSource = presenter
         
         // delegate
-        collectionView.delegate = presenter
+        tableView.delegate = presenter
         
         // cell
-        collectionView.register(TaskCell.self, forCellWithReuseIdentifier: TaskCell.identifier)
+        tableView.register(TaskCell.self, forCellReuseIdentifier: TaskCell.identifier)
         
-        return collectionView
+        return tableView
     }()
     
     private lazy var rightBarButtonItem: UIBarButtonItem = {
@@ -67,16 +65,16 @@ final class TodoListViewController: UIViewController {
 }
 
 extension TodoListViewController: TodoListProtocol {
-    func setTitle() {
+    func setupNavigationBar() {
         navigationItem.title = tm.list?.name
+        navigationController?.navigationBar.tintColor = .mainTintColor
+        navigationItem.rightBarButtonItem = rightBarButtonItem
     }
     
     func layout() {
         view.backgroundColor = .systemBackground
-        navigationController?.navigationBar.tintColor = .mainTintColor
-        navigationItem.rightBarButtonItem = rightBarButtonItem
         
-        [collectionView, addTaskButton]
+        [tableView, addTaskButton]
             .forEach {
                 view.addSubview($0)
                 $0.translatesAutoresizingMaskIntoConstraints = false
@@ -86,12 +84,12 @@ extension TodoListViewController: TodoListProtocol {
         let inset: CGFloat = 16.0
         
         NSLayoutConstraint.activate([
-            collectionView.topAnchor.constraint(equalTo: superview.topAnchor),
-            collectionView.leadingAnchor.constraint(equalTo: superview.leadingAnchor),
-            collectionView.trailingAnchor.constraint(equalTo: superview.trailingAnchor),
+            tableView.topAnchor.constraint(equalTo: superview.topAnchor, constant: 5.0),
+            tableView.leadingAnchor.constraint(equalTo: superview.leadingAnchor, constant: inset),
+            tableView.trailingAnchor.constraint(equalTo: superview.trailingAnchor, constant: -inset),
             
-            addTaskButton.topAnchor.constraint(equalTo: collectionView.bottomAnchor, constant: inset),
-            addTaskButton.leadingAnchor.constraint(equalTo: collectionView.leadingAnchor, constant: inset),
+            addTaskButton.topAnchor.constraint(equalTo: tableView.bottomAnchor, constant: inset),
+            addTaskButton.leadingAnchor.constraint(equalTo: tableView.leadingAnchor),
             addTaskButton.bottomAnchor.constraint(equalTo: superview.bottomAnchor, constant: -inset)
         ])
     }
@@ -131,6 +129,6 @@ private extension TodoListViewController {
     }
     
     @objc func reload() {
-        collectionView.reloadData()
+        tableView.reloadData()
     }
 }

@@ -7,7 +7,7 @@
 
 import UIKit
 
-final class TaskCell: UICollectionViewCell {
+final class TaskCell: UITableViewCell {
     
     static let identifier = "TaskCell"
     
@@ -41,7 +41,7 @@ final class TaskCell: UICollectionViewCell {
         return button
     }()
     
-    private func layout(_ superview: UICollectionViewCell) {
+    private func layout(_ superview: UITableViewCell) {
         [doneButton, taskTitleLabel, starButton]
             .forEach {
                 addSubview($0)
@@ -60,8 +60,11 @@ final class TaskCell: UICollectionViewCell {
         ])
     }
     
-    func configure(task: Task, superview cell: UICollectionViewCell) {
+    func configure(task: Task, superview cell: UITableViewCell) {
         layout(cell)
+        
+        // cell tap 시 배경색 회색되지 않게
+        cell.selectionStyle = .none
         
         taskTitleLabel.text = task.title
         doneButton.isSelected = task.isDone ? true : false
