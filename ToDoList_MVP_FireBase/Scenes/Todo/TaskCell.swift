@@ -44,7 +44,7 @@ final class TaskCell: UITableViewCell {
     private func layout(_ superview: UITableViewCell) {
         [doneButton, taskTitleLabel, starButton]
             .forEach {
-                addSubview($0)
+                contentView.addSubview($0)
                 $0.translatesAutoresizingMaskIntoConstraints = false
             }
         
