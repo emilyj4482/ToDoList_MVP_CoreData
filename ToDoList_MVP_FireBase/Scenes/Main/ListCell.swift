@@ -7,7 +7,7 @@
 
 import UIKit
 
-final class ListCell: UICollectionViewCell {
+final class ListCell: UITableViewCell {
     static let identifier = "ListCell"
     
     private lazy var listIcon: UIImageView = {
@@ -32,7 +32,7 @@ final class ListCell: UICollectionViewCell {
         return label
     }()
     
-    private func layout(_ superview: UICollectionViewCell) {
+    private func layout(_ superview: UITableViewCell) {
         [listIcon, listNameLabel, taskCountLabel]
             .forEach {
                 addSubview($0)
@@ -51,8 +51,11 @@ final class ListCell: UICollectionViewCell {
         ])
     }
     
-    func configure(list: List, superview cell: UICollectionViewCell) {
+    func configure(list: List, superview cell: UITableViewCell) {
         layout(cell)
+        
+        // cell tap 시 배경색 회색되지 않게
+        cell.selectionStyle = .none
         
         // Important list의 경우 icon을 star로 지정
         if list.id == 1 {
