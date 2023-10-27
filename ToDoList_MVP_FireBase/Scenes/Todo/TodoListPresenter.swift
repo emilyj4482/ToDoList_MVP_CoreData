@@ -60,5 +60,20 @@ extension TodoListPresenter: UITableViewDataSource {
 }
 
 extension TodoListPresenter: UITableViewDelegate {
-    
+    func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
+        let delete = UIContextualAction(style: .destructive, title: "") { _, _, _ in
+            print("delete tapped")
+        }
+        
+        let edit = UIContextualAction(style: .normal, title: "") { _, _, _ in
+            print("edit tapped")
+        }
+        
+        delete.image = UIImage(systemName: "trash")
+        edit.image = UIImage(systemName: "pencil")
+        
+        let swipe = UISwipeActionsConfiguration(actions: [delete, edit])
+        
+        return swipe
+    }
 }

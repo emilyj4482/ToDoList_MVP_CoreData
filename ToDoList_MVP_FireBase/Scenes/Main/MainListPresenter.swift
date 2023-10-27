@@ -53,9 +53,15 @@ extension MainListPresenter: UITableViewDelegate {
         viewController.goToTodoListView(index: indexPath.item)
     }
     
-    func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
-        if editingStyle == .delete {
-            print("swiped")
+    func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
+        let delete = UIContextualAction(style: .destructive, title: "") { _, _, _ in
+            print("delete tapped")
         }
+        
+        delete.image = UIImage(systemName: "trash")
+        
+        let swipe = UISwipeActionsConfiguration(actions: [delete])
+        
+        return swipe
     }
 }

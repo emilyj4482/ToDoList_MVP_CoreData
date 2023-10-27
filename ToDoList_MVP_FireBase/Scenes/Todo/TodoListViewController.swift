@@ -89,7 +89,7 @@ extension TodoListViewController: TodoListProtocol {
             tableView.trailingAnchor.constraint(equalTo: superview.trailingAnchor),
             
             addTaskButton.topAnchor.constraint(equalTo: tableView.bottomAnchor, constant: inset),
-            addTaskButton.leadingAnchor.constraint(equalTo: tableView.leadingAnchor),
+            addTaskButton.leadingAnchor.constraint(equalTo: tableView.leadingAnchor, constant: inset),
             addTaskButton.bottomAnchor.constraint(equalTo: superview.bottomAnchor, constant: -inset)
         ])
     }
