@@ -124,4 +124,12 @@ final class TodoManager {
         reloadViewWhenTaskUpdated(task)
         saveData()
     }
+    
+    private func deleteSingleTask(_ task: Task, taskIndex: Int) {
+        
+    }
+    
+    func deleteTask(index: Int) {
+        
+    }
 }
