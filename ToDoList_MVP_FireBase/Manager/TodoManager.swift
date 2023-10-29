@@ -50,6 +50,11 @@ final class TodoManager {
         saveData()
     }
     
+    func deleteList(index: Int) {
+        lists.remove(at: index)
+        saveData()
+    }
+    
     private func createTask(_ title: String, listId: Int) -> Task {
         return Task(listId: listId, title: title, isDone: false, isImportant: false)
     }

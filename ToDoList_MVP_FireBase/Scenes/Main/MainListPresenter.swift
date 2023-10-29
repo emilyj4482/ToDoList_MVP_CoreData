@@ -54,8 +54,11 @@ extension MainListPresenter: UITableViewDelegate {
     }
     
     func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
-        let delete = UIContextualAction(style: .destructive, title: "") { _, _, _ in
-            print("delete tapped")
+        
+        let delete = UIContextualAction(style: .destructive, title: "") { [unowned self] _, _, completion in
+            self.tm.deleteList(index: indexPath.row)
+            completion(true)
+            tableView.reloadData()
         }
         
         delete.image = UIImage(systemName: "trash")
