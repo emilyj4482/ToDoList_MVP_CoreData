@@ -56,6 +56,13 @@ extension MainListPresenter: UITableViewDelegate {
     func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
         
         let delete = UIContextualAction(style: .destructive, title: "") { [unowned self] _, _, completion in
+            
+            // list가 important task를 포함하고 있을 때, list에 속했던 important task가 Important list에서도 삭제
+            let list = tm.lists[indexPath.row]
+            guard let tasks = list.tasks else { return }
+            if tasks.contains(where: { $0.isImportant }) {
+                tm.lists[0].tasks?.removeAll(where: { $0.listId == list.id })
+            }
             self.tm.deleteList(index: indexPath.row)
             completion(true)
             tableView.reloadData()
