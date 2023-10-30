@@ -62,8 +62,11 @@ extension TodoListPresenter: UITableViewDataSource {
 extension TodoListPresenter: UITableViewDelegate {
     func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
         let delete = UIContextualAction(style: .destructive, title: "") { [unowned self] _, _, completion in
-            print("delete tapped")
+            self.tm.deleteTask(index: indexPath.row)
             completion(true)
+            // view reload : task count 적용을 위해 main view도 reload
+            tableView.reloadData()
+            NotificationCenter.default.post(name: Notification.reloadMainView, object: nil)
         }
         
         let edit = UIContextualAction(style: .normal, title: "") { [unowned self] _, _, completion in

@@ -125,9 +125,9 @@ final class TodoManager {
         saveData()
     }
     
-    private func deleteSingleTask(_ task: Task) {
-        if let index = lists.firstIndex(where: { $0.id == list?.id }) {
-            lists[index].tasks?.removeAll(where: { $0.id == task.id })
+    private func deleteSingleTask(listId: Int, taskId: String) {
+        if let index = lists.firstIndex(where: { $0.id == listId }) {
+            lists[index].tasks?.removeAll(where: { $0.id == taskId })
         }
     }
     
@@ -135,7 +135,12 @@ final class TodoManager {
     func deleteTask(index: Int) {
         let task = tasks[index]
         if task.isImportant {
-            
+            deleteSingleTask(listId: 1, taskId: task.id)
         }
+        deleteSingleTask(listId: task.listId, taskId: task.id)
+        
+        // view reload
+        tasks.remove(at: index)
+        saveData()
     }
 }
