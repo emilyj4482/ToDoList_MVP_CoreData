@@ -125,11 +125,17 @@ final class TodoManager {
         saveData()
     }
     
-    private func deleteSingleTask(_ task: Task, taskIndex: Int) {
-        
+    private func deleteSingleTask(_ task: Task) {
+        if let index = lists.firstIndex(where: { $0.id == list?.id }) {
+            lists[index].tasks?.removeAll(where: { $0.id == task.id })
+        }
     }
     
+    // important task인 경우 Important group과 task가 속한 group 양쪽에서 삭제 필요
     func deleteTask(index: Int) {
-        
+        let task = tasks[index]
+        if task.isImportant {
+            
+        }
     }
 }
