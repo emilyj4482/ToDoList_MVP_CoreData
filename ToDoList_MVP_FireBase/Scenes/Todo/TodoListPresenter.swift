@@ -37,7 +37,7 @@ final class TodoListPresenter: NSObject {
 extension TodoListPresenter: UITableViewDataSource {
     
     func numberOfSections(in tableView: UITableView) -> Int {
-        switch tm.isDoneTasks().isEmpty {
+        switch tm.tasks.filter({ $0.isDone }).isEmpty {
         case false:
             return 2
         default:
@@ -48,9 +48,9 @@ extension TodoListPresenter: UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         switch section {
         case 1:
-            return tm.isDoneTasks().count
+            return tm.tasks.filter({ $0.isDone }).count
         default:
-            return tm.unDoneTasks().count
+            return tm.tasks.filter({ !$0.isDone }).count
         }
     }
     
@@ -60,9 +60,9 @@ extension TodoListPresenter: UITableViewDataSource {
         
         switch indexPath.section {
         case 1:
-            task = tm.isDoneTasks()[indexPath.item]
+            task = tm.tasks.filter({ $0.isDone })[indexPath.item]
         default:
-            task = tm.unDoneTasks()[indexPath.item]
+            task = tm.tasks.filter({ !$0.isDone })[indexPath.item]
         }
         
         // var task = tm.tasks[indexPath.item]
@@ -102,9 +102,9 @@ extension TodoListPresenter: UITableViewDelegate {
         var task: Task
         switch indexPath.section {
         case 1:
-            task = tm.isDoneTasks()[indexPath.row]
+            task = tm.tasks.filter({ $0.isDone })[indexPath.row]
         default:
-            task = tm.unDoneTasks()[indexPath.row]
+            task = tm.tasks.filter({ !$0.isDone })[indexPath.row]
         }
         
         let delete = UIContextualAction(style: .destructive, title: "") { [unowned self] _, _, completion in
