@@ -37,7 +37,7 @@ final class TodoListPresenter: NSObject {
 extension TodoListPresenter: UITableViewDataSource {
     
     func numberOfSections(in tableView: UITableView) -> Int {
-        switch tm.isDoneTasks.isEmpty {
+        switch tm.isDoneTasks(tm.tasks).isEmpty {
         case false:
             return 2
         default:
@@ -55,9 +55,9 @@ extension TodoListPresenter: UITableViewDataSource {
         
         switch indexPath.section {
         case 1:
-            task = tm.isDoneTasks[indexPath.item]
+            task = tm.isDoneTasks(tm.tasks)[indexPath.item]
         default:
-            task = tm.unDoneTasks[indexPath.item]
+            task = tm.unDoneTasks(tm.tasks)[indexPath.item]
         }
         
         // var task = tm.tasks[indexPath.item]
