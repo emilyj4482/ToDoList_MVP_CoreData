@@ -71,9 +71,10 @@ extension TaskEditViewController: TaskEditProtocol {
             
             textField.centerYAnchor.constraint(equalTo: doneImage.centerYAnchor),
             textField.leadingAnchor.constraint(equalTo: doneImage.trailingAnchor, constant: 10.0),
+            textField.trailingAnchor.constraint(equalTo: doneButton.leadingAnchor, constant: -5.0),
             
             doneButton.centerYAnchor.constraint(equalTo: textField.centerYAnchor),
-            doneButton.leadingAnchor.constraint(equalTo: textField.trailingAnchor),
+            doneButton.widthAnchor.constraint(equalToConstant: 45.0),
             doneButton.trailingAnchor.constraint(equalTo: superview.trailingAnchor, constant: -inset)
         ])
     }
