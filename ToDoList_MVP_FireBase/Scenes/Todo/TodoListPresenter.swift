@@ -37,7 +37,7 @@ final class TodoListPresenter: NSObject {
 extension TodoListPresenter: UITableViewDataSource {
     
     func numberOfSections(in tableView: UITableView) -> Int {
-        switch tm.isDoneTasks(tm.tasks).isEmpty {
+        switch tm.isDoneTasks().isEmpty {
         case false:
             return 2
         default:
@@ -46,7 +46,14 @@ extension TodoListPresenter: UITableViewDataSource {
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return tm.tasks.count
+        switch section {
+        case 1:
+            return tm.isDoneTasks().count
+        default:
+            return tm.unDoneTasks().count
+        }
+        
+        // return tm.tasks.count
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
@@ -55,9 +62,9 @@ extension TodoListPresenter: UITableViewDataSource {
         
         switch indexPath.section {
         case 1:
-            task = tm.isDoneTasks(tm.tasks)[indexPath.item]
+            task = tm.isDoneTasks()[indexPath.item]
         default:
-            task = tm.unDoneTasks(tm.tasks)[indexPath.item]
+            task = tm.unDoneTasks()[indexPath.item]
         }
         
         // var task = tm.tasks[indexPath.item]
@@ -67,6 +74,7 @@ extension TodoListPresenter: UITableViewDataSource {
         cell.doneButtonTapHandler = { isDone in
             task.isDone = isDone
             self.tm.updateTask(task)
+            tableView.reloadData()
         }
         
         cell.starButtonTapHandler = { isImportant in

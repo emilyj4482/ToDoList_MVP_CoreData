@@ -145,11 +145,21 @@ final class TodoManager {
     }
     
     // task.isDone 여부에 따라 section을 분리하기 위해 tasks filter
-    func unDoneTasks(_ tasks: [Task]) -> [Task] {
-        return tasks.filter { !$0.isDone }
+    func unDoneTasks() -> [Task] {
+        guard
+            let list = list,
+            let index = lists.firstIndex(where: { $0.id == list.id }),
+            let tasks = lists[index].tasks
+        else { return [] }
+        return tasks.filter({ !$0.isDone })
     }
     
-    func isDoneTasks(_ tasks: [Task]) -> [Task] {
-        return tasks.filter { $0.isDone }
+    func isDoneTasks() -> [Task] {
+        guard
+            let list = list,
+            let index = lists.firstIndex(where: { $0.id == list.id }),
+            let tasks = lists[index].tasks
+        else { return [] }
+        return tasks.filter({ $0.isDone })
     }
 }
