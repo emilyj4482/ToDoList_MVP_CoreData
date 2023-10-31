@@ -97,6 +97,13 @@ extension TodoListViewController: TodoListProtocol {
     func observeNotification() {
         NotificationCenter.default.addObserver(self, selector: #selector(reload), name: Notification.reloadTodoView, object: nil)
     }
+    
+    func swipedToEdit(_ task: Task) {
+        let vc = TaskEditViewController()
+        vc.isEditMode = true
+        vc.taskToEdit = task
+        present(vc, animated: true)
+    }
 }
 
 private extension TodoListViewController {
@@ -125,7 +132,9 @@ private extension TodoListViewController {
     }
     
     @objc func addTaskButtonTapped() {
-        present(TaskEditViewController(), animated: true)
+        let vc = TaskEditViewController()
+        vc.isEditMode = false
+        present(vc, animated: true)
     }
     
     @objc func reload() {

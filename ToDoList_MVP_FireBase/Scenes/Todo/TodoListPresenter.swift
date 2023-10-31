@@ -11,6 +11,7 @@ protocol TodoListProtocol {
     func setupNavigationBar()
     func layout()
     func observeNotification()
+    func swipedToEdit(_ task: Task)
 }
 
 final class TodoListPresenter: NSObject {
@@ -70,7 +71,7 @@ extension TodoListPresenter: UITableViewDelegate {
         }
         
         let edit = UIContextualAction(style: .normal, title: "") { [unowned self] _, _, completion in
-            print("edit tapped")
+            viewController.swipedToEdit(tm.tasks[indexPath.row])
             completion(true)
         }
         

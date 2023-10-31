@@ -11,6 +11,9 @@ final class TaskEditViewController: UIViewController {
     
     let tm = TodoManager.shared
     
+    var isEditMode: Bool = false
+    var taskToEdit: Task?
+    
     private lazy var presenter = TaskEditPresenter(viewController: self)
     
     private lazy var doneImage: UIImageView = {
@@ -80,14 +83,27 @@ extension TaskEditViewController: TaskEditProtocol {
         
         doneImage.image = UIImage(systemName: "circle")
         doneImage.tintColor = .red
+        
+        // swipe to edit일 경우 기존 task title이 textfield에 입력된 상태가 되도록 함
+        if isEditMode {
+            textField.text = taskToEdit?.title
+        }
     }
     
-    func addTask() {
-        guard let newTaskTitle = textField.text?.trim() else { return }
-        if !newTaskTitle.isEmpty {
+    func setTask() {
+        // edit mode일 경우 textfield에 입력된 title을 기반으로 task를 update, 아닐 경우 create
+        guard
+            let newTaskTitle = textField.text?.trim(),
+            var task = taskToEdit
+        else { return }
+        
+        if !newTaskTitle.isEmpty && !isEditMode {
             tm.addTask(newTaskTitle)
-            dismiss(animated: true)
+        } else if !newTaskTitle.isEmpty && isEditMode {
+            task.title = newTaskTitle
+            tm.updateTask(task)
         }
+        dismiss(animated: true)
     }
     
     func postNotification() {
