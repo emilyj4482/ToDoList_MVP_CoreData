@@ -61,7 +61,6 @@ extension MainListPresenter: UITableViewDelegate {
             // 정말로 삭제할 건지 확인하는 action sheet 호출
             viewController.showActionSheet(list, index: indexPath.row)
             completion(true)
-            tableView.reloadData()
         }
         
         delete.image = UIImage(systemName: "trash")

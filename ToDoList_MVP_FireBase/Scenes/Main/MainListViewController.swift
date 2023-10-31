@@ -133,6 +133,7 @@ extension MainListViewController: MainListProtocol {
         let alert = UIAlertController(title: "Are you sure deleting the list?", message: "", preferredStyle: .actionSheet)
         let deleteButton = UIAlertAction(title: "Delete", style: .destructive) { _ in
             self.deleteList(list, index: index)
+            self.tableView.reloadData()
         }
         let cancelButton = UIAlertAction(title: "Cancel", style: .cancel)
         
