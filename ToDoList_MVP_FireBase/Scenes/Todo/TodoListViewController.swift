@@ -89,13 +89,20 @@ extension TodoListViewController: TodoListProtocol {
             tableView.trailingAnchor.constraint(equalTo: superview.trailingAnchor),
             
             addTaskButton.topAnchor.constraint(equalTo: tableView.bottomAnchor, constant: inset),
-            addTaskButton.leadingAnchor.constraint(equalTo: tableView.leadingAnchor),
+            addTaskButton.leadingAnchor.constraint(equalTo: tableView.leadingAnchor, constant: inset),
             addTaskButton.bottomAnchor.constraint(equalTo: superview.bottomAnchor, constant: -inset)
         ])
     }
     
     func observeNotification() {
         NotificationCenter.default.addObserver(self, selector: #selector(reload), name: Notification.reloadTodoView, object: nil)
+    }
+    
+    func swipedToEdit(_ task: Task) {
+        let vc = TaskEditViewController()
+        vc.isEditMode = true
+        vc.taskToEdit = task
+        present(vc, animated: true)
     }
 }
 
@@ -125,7 +132,9 @@ private extension TodoListViewController {
     }
     
     @objc func addTaskButtonTapped() {
-        present(TaskEditViewController(), animated: true)
+        let vc = TaskEditViewController()
+        vc.isEditMode = false
+        present(vc, animated: true)
     }
     
     @objc func reload() {

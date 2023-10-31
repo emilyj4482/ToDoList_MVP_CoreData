@@ -11,6 +11,7 @@ protocol TodoListProtocol {
     func setupNavigationBar()
     func layout()
     func observeNotification()
+    func swipedToEdit(_ task: Task)
 }
 
 final class TodoListPresenter: NSObject {
@@ -60,5 +61,25 @@ extension TodoListPresenter: UITableViewDataSource {
 }
 
 extension TodoListPresenter: UITableViewDelegate {
-    
+    func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
+        let delete = UIContextualAction(style: .destructive, title: "") { [unowned self] _, _, completion in
+            self.tm.deleteTask(index: indexPath.row)
+            completion(true)
+            // view reload : task count 적용을 위해 main view도 reload
+            tableView.reloadData()
+            NotificationCenter.default.post(name: Notification.reloadMainView, object: nil)
+        }
+        
+        let edit = UIContextualAction(style: .normal, title: "") { [unowned self] _, _, completion in
+            viewController.swipedToEdit(tm.tasks[indexPath.row])
+            completion(true)
+        }
+        
+        delete.image = UIImage(systemName: "trash")
+        edit.image = UIImage(systemName: "pencil")
+        
+        let swipe = UISwipeActionsConfiguration(actions: [delete, edit])
+        
+        return swipe
+    }
 }

@@ -128,6 +128,28 @@ extension MainListViewController: MainListProtocol {
     func observeNotification() {
         NotificationCenter.default.addObserver(self, selector: #selector(reload), name: Notification.reloadMainView, object: nil)
     }
+    
+    func showActionSheet(_ list: List, index: Int) {
+        let alert = UIAlertController(title: "Are you sure deleting the list?", message: "", preferredStyle: .actionSheet)
+        let deleteButton = UIAlertAction(title: "Delete", style: .destructive) { [unowned self] _ in
+            deleteList(list, index: index)
+            tableView.reloadData()
+        }
+        let cancelButton = UIAlertAction(title: "Cancel", style: .cancel)
+        
+        alert.addAction(deleteButton)
+        alert.addAction(cancelButton)
+        self.present(alert, animated: true)
+    }
+    
+    func deleteList(_ list: List, index: Int) {
+        // 삭제 대상 list가 important task를 포함하고 있을 때, list에 속했던 important task들이 Important list에서도 삭제되어야 한다.
+        guard let tasks = list.tasks else { return }
+        if tasks.contains(where: { $0.isImportant }) {
+            tm.lists[0].tasks?.removeAll(where: { $0.listId == list.id })
+        }
+        tm.deleteList(index: index)
+    }
 }
 
 private extension MainListViewController {

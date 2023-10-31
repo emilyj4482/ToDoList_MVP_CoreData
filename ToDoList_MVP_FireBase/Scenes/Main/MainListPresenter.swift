@@ -13,6 +13,7 @@ protocol MainListProtocol {
     func fetchData()
     func goToTodoListView(index: Int)
     func observeNotification()
+    func showActionSheet(_ list: List, index: Int)
 }
 
 final class MainListPresenter: NSObject {
@@ -53,9 +54,19 @@ extension MainListPresenter: UITableViewDelegate {
         viewController.goToTodoListView(index: indexPath.item)
     }
     
-    func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
-        if editingStyle == .delete {
-            print("swiped")
+    func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
+        
+        let delete = UIContextualAction(style: .destructive, title: "") { [unowned self] _, _, completion in
+            let list = tm.lists[indexPath.row]
+            // 정말로 삭제할 건지 확인하는 action sheet 호출
+            viewController.showActionSheet(list, index: indexPath.row)
+            completion(true)
         }
+        
+        delete.image = UIImage(systemName: "trash")
+        
+        let swipe = UISwipeActionsConfiguration(actions: [delete])
+        
+        return swipe
     }
 }
