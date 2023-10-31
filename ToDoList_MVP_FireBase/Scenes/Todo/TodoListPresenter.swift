@@ -35,14 +35,32 @@ final class TodoListPresenter: NSObject {
 }
 
 extension TodoListPresenter: UITableViewDataSource {
+    
+    func numberOfSections(in tableView: UITableView) -> Int {
+        switch tm.isDoneTasks.isEmpty {
+        case false:
+            return 2
+        default:
+            return 1
+        }
+    }
+    
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return tm.tasks.count
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         guard let cell = tableView.dequeueReusableCell(withIdentifier: TaskCell.identifier, for: indexPath) as? TaskCell else { return UITableViewCell() }
-
-        var task = tm.tasks[indexPath.item]
+        var task: Task
+        
+        switch indexPath.section {
+        case 1:
+            task = tm.isDoneTasks[indexPath.item]
+        default:
+            task = tm.unDoneTasks[indexPath.item]
+        }
+        
+        // var task = tm.tasks[indexPath.item]
         cell.configure(task: task, superview: cell)
         
         // handler : done & star button tap에 따른 data update
@@ -58,6 +76,19 @@ extension TodoListPresenter: UITableViewDataSource {
         
         return cell
     }
+    
+    func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
+        guard let header = tableView.dequeueReusableHeaderFooterView(withIdentifier: TaskDoneHeader.identifier) as? TaskDoneHeader else { return UIView() }
+        header.layout()
+        
+        switch section {
+        case 1:
+            return header
+        default:
+            return UIView()
+        }
+    }
+    
 }
 
 extension TodoListPresenter: UITableViewDelegate {
@@ -81,5 +112,15 @@ extension TodoListPresenter: UITableViewDelegate {
         let swipe = UISwipeActionsConfiguration(actions: [delete, edit])
         
         return swipe
+    }
+    
+    // header height
+    func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
+        switch section {
+        case 1:
+            return 20
+        default:
+            return 0
+        }
     }
 }

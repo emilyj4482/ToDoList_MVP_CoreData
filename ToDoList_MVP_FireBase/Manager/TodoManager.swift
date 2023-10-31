@@ -22,6 +22,14 @@ final class TodoManager {
     }
     var tasks: [Task] = []      // todo view에서 collection view를 구성하기 위한 data 저장용 프로퍼티
     
+    var unDoneTasks: [Task] {
+        return tasks.filter({ !$0.isDone })
+    }
+    
+    var isDoneTasks: [Task] {
+        return tasks.filter({ $0.isDone })
+    }
+    
     private let db = Database.database().reference()
     
     // firebase realtime database에 저장

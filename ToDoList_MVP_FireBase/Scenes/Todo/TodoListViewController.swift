@@ -31,6 +31,9 @@ final class TodoListViewController: UIViewController {
         // cell
         tableView.register(TaskCell.self, forCellReuseIdentifier: TaskCell.identifier)
         
+        // header
+        tableView.register(TaskDoneHeader.self, forHeaderFooterViewReuseIdentifier: TaskDoneHeader.identifier)
+        
         return tableView
     }()
     
@@ -84,7 +87,7 @@ extension TodoListViewController: TodoListProtocol {
         let inset: CGFloat = 16.0
         
         NSLayoutConstraint.activate([
-            tableView.topAnchor.constraint(equalTo: superview.topAnchor, constant: 5.0),
+            tableView.topAnchor.constraint(equalTo: superview.topAnchor),
             tableView.leadingAnchor.constraint(equalTo: superview.leadingAnchor),
             tableView.trailingAnchor.constraint(equalTo: superview.trailingAnchor),
             
