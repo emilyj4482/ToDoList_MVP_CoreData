@@ -95,12 +95,12 @@ extension TaskEditViewController: TaskEditProtocol {
         // edit mode일 경우 textfield에 입력된 title을 기반으로 task를 update, 아닐 경우 create
         guard
             let newTaskTitle = textField.text?.trim(),
-            var task = taskToEdit
+            !newTaskTitle.isEmpty
         else { return }
         
-        if !newTaskTitle.isEmpty && !isEditMode {
+        if !isEditMode {
             tm.addTask(newTaskTitle)
-        } else if !newTaskTitle.isEmpty && isEditMode {
+        } else if isEditMode, var task = taskToEdit {
             task.title = newTaskTitle
             tm.updateTask(task)
         }
