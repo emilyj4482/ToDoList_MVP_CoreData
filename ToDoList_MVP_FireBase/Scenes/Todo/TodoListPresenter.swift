@@ -52,8 +52,6 @@ extension TodoListPresenter: UITableViewDataSource {
         default:
             return tm.unDoneTasks().count
         }
-        
-        // return tm.tasks.count
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
@@ -101,8 +99,16 @@ extension TodoListPresenter: UITableViewDataSource {
 
 extension TodoListPresenter: UITableViewDelegate {
     func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
+        var task: Task
+        switch indexPath.section {
+        case 1:
+            task = tm.isDoneTasks()[indexPath.row]
+        default:
+            task = tm.unDoneTasks()[indexPath.row]
+        }
+        
         let delete = UIContextualAction(style: .destructive, title: "") { [unowned self] _, _, completion in
-            self.tm.deleteTask(index: indexPath.row)
+            self.tm.deleteTask(task)
             completion(true)
             // view reload : task count 적용을 위해 main view도 reload
             tableView.reloadData()
@@ -110,7 +116,7 @@ extension TodoListPresenter: UITableViewDelegate {
         }
         
         let edit = UIContextualAction(style: .normal, title: "") { [unowned self] _, _, completion in
-            viewController.swipedToEdit(tm.tasks[indexPath.row])
+            viewController.swipedToEdit(task)
             completion(true)
         }
         

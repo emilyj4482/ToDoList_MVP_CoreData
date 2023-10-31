@@ -132,15 +132,14 @@ final class TodoManager {
     }
     
     // important task인 경우 Important group과 task가 속한 group 양쪽에서 삭제 필요
-    func deleteTask(index: Int) {
-        let task = tasks[index]
+    func deleteTask(_ task: Task) {
         if task.isImportant {
             deleteSingleTask(listId: 1, taskId: task.id)
         }
         deleteSingleTask(listId: task.listId, taskId: task.id)
         
         // view reload
-        tasks.remove(at: index)
+        tasks.removeAll { $0.id == task.id }
         saveData()
     }
     
