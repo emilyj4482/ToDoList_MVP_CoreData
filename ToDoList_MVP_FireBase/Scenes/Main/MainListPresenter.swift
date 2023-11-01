@@ -56,6 +56,8 @@ extension MainListPresenter: UITableViewDelegate {
     
     func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
         
+        guard indexPath.row != 0 else { return nil }
+        
         let delete = UIContextualAction(style: .destructive, title: "") { [unowned self] _, _, completion in
             let list = tm.lists[indexPath.row]
             // 정말로 삭제할 건지 확인하는 action sheet 호출
