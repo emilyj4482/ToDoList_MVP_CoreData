@@ -72,6 +72,11 @@ extension TodoListViewController: TodoListProtocol {
         navigationItem.title = tm.list?.name
         navigationController?.navigationBar.tintColor = .mainTintColor
         navigationItem.rightBarButtonItem = rightBarButtonItem
+        
+        // important list일 경우 edit button 숨김
+        if let id = tm.list?.id, id == 1 {
+            navigationItem.rightBarButtonItem?.isHidden = true
+        }
     }
     
     func layout() {
@@ -82,6 +87,11 @@ extension TodoListViewController: TodoListProtocol {
                 view.addSubview($0)
                 $0.translatesAutoresizingMaskIntoConstraints = false
             }
+        
+        // important list일 경우 add task button 숨김
+        if tm.list?.id == 1 {
+            addTaskButton.isHidden = true
+        }
         
         let superview = view.safeAreaLayoutGuide
         let inset: CGFloat = 16.0
