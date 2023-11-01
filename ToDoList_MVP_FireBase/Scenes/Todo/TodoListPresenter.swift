@@ -35,20 +35,44 @@ final class TodoListPresenter: NSObject {
 }
 
 extension TodoListPresenter: UITableViewDataSource {
+    
+    func numberOfSections(in tableView: UITableView) -> Int {
+        switch tm.tasks.filter({ $0.isDone }).isEmpty {
+        case false:
+            return 2
+        default:
+            return 1
+        }
+    }
+    
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return tm.tasks.count
+        switch section {
+        case 1:
+            return tm.tasks.filter({ $0.isDone }).count
+        default:
+            return tm.tasks.filter({ !$0.isDone }).count
+        }
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         guard let cell = tableView.dequeueReusableCell(withIdentifier: TaskCell.identifier, for: indexPath) as? TaskCell else { return UITableViewCell() }
-
-        var task = tm.tasks[indexPath.item]
+        var task: Task
+        
+        switch indexPath.section {
+        case 1:
+            task = tm.tasks.filter({ $0.isDone })[indexPath.item]
+        default:
+            task = tm.tasks.filter({ !$0.isDone })[indexPath.item]
+        }
+        
+        // var task = tm.tasks[indexPath.item]
         cell.configure(task: task, superview: cell)
         
         // handler : done & star button tap에 따른 data update
         cell.doneButtonTapHandler = { isDone in
             task.isDone = isDone
             self.tm.updateTask(task)
+            tableView.reloadData()
         }
         
         cell.starButtonTapHandler = { isImportant in
@@ -58,12 +82,33 @@ extension TodoListPresenter: UITableViewDataSource {
         
         return cell
     }
+    
+    func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
+        guard let header = tableView.dequeueReusableHeaderFooterView(withIdentifier: TaskDoneHeader.identifier) as? TaskDoneHeader else { return UIView() }
+        header.layout()
+        
+        switch section {
+        case 1:
+            return header
+        default:
+            return UIView()
+        }
+    }
+    
 }
 
 extension TodoListPresenter: UITableViewDelegate {
     func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
+        var task: Task
+        switch indexPath.section {
+        case 1:
+            task = tm.tasks.filter({ $0.isDone })[indexPath.row]
+        default:
+            task = tm.tasks.filter({ !$0.isDone })[indexPath.row]
+        }
+        
         let delete = UIContextualAction(style: .destructive, title: "") { [unowned self] _, _, completion in
-            self.tm.deleteTask(index: indexPath.row)
+            self.tm.deleteTask(task)
             completion(true)
             // view reload : task count 적용을 위해 main view도 reload
             tableView.reloadData()
@@ -71,7 +116,7 @@ extension TodoListPresenter: UITableViewDelegate {
         }
         
         let edit = UIContextualAction(style: .normal, title: "") { [unowned self] _, _, completion in
-            viewController.swipedToEdit(tm.tasks[indexPath.row])
+            viewController.swipedToEdit(task)
             completion(true)
         }
         
@@ -81,5 +126,15 @@ extension TodoListPresenter: UITableViewDelegate {
         let swipe = UISwipeActionsConfiguration(actions: [delete, edit])
         
         return swipe
+    }
+    
+    // header height
+    func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
+        switch section {
+        case 1:
+            return 20
+        default:
+            return 0
+        }
     }
 }

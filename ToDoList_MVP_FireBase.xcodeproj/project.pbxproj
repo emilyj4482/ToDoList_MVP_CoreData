@@ -32,6 +32,7 @@
 		A1E1DB572ADC7C3C007D46FD /* AddListPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1E1DB562ADC7C3C007D46FD /* AddListPresenter.swift */; };
 		A1E1DB592ADC7C46007D46FD /* TodoListPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1E1DB582ADC7C46007D46FD /* TodoListPresenter.swift */; };
 		A1E1DB5B2ADC7C4E007D46FD /* TaskCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1E1DB5A2ADC7C4E007D46FD /* TaskCell.swift */; };
+		A1E549162AF1313200305CDD /* TaskDoneHeader.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1E549152AF1313200305CDD /* TaskDoneHeader.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -58,6 +59,7 @@
 		A1E1DB562ADC7C3C007D46FD /* AddListPresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddListPresenter.swift; sourceTree = "<group>"; };
 		A1E1DB582ADC7C46007D46FD /* TodoListPresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TodoListPresenter.swift; sourceTree = "<group>"; };
 		A1E1DB5A2ADC7C4E007D46FD /* TaskCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TaskCell.swift; sourceTree = "<group>"; };
+		A1E549152AF1313200305CDD /* TaskDoneHeader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TaskDoneHeader.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -180,6 +182,7 @@
 				A1E1DB532ADC7C04007D46FD /* TodoListViewController.swift */,
 				A1E1DB582ADC7C46007D46FD /* TodoListPresenter.swift */,
 				A1E1DB5A2ADC7C4E007D46FD /* TaskCell.swift */,
+				A1E549152AF1313200305CDD /* TaskDoneHeader.swift */,
 			);
 			path = Todo;
 			sourceTree = "<group>";
@@ -275,6 +278,7 @@
 				A1A7B1D52ADD9B1000F9214A /* List.swift in Sources */,
 				A1E1DB512ADC7BE3007D46FD /* AddListViewController.swift in Sources */,
 				A1CF4AAC2AD9B44F00C6E34C /* SceneDelegate.swift in Sources */,
+				A1E549162AF1313200305CDD /* TaskDoneHeader.swift in Sources */,
 				A1A7B1D72ADD9B1500F9214A /* Task.swift in Sources */,
 				A1E1DB5B2ADC7C4E007D46FD /* TaskCell.swift in Sources */,
 				A1A928132AE2CB9400E38C2C /* +NotificationCenter.swift in Sources */,

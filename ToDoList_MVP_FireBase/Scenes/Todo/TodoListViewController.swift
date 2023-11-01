@@ -31,6 +31,9 @@ final class TodoListViewController: UIViewController {
         // cell
         tableView.register(TaskCell.self, forCellReuseIdentifier: TaskCell.identifier)
         
+        // header
+        tableView.register(TaskDoneHeader.self, forHeaderFooterViewReuseIdentifier: TaskDoneHeader.identifier)
+        
         return tableView
     }()
     
@@ -69,6 +72,11 @@ extension TodoListViewController: TodoListProtocol {
         navigationItem.title = tm.list?.name
         navigationController?.navigationBar.tintColor = .mainTintColor
         navigationItem.rightBarButtonItem = rightBarButtonItem
+        
+        // important list일 경우 edit button 숨김
+        if let id = tm.list?.id, id == 1 {
+            navigationItem.rightBarButtonItem?.isHidden = true
+        }
     }
     
     func layout() {
@@ -80,11 +88,16 @@ extension TodoListViewController: TodoListProtocol {
                 $0.translatesAutoresizingMaskIntoConstraints = false
             }
         
+        // important list일 경우 add task button 숨김
+        if tm.list?.id == 1 {
+            addTaskButton.isHidden = true
+        }
+        
         let superview = view.safeAreaLayoutGuide
         let inset: CGFloat = 16.0
         
         NSLayoutConstraint.activate([
-            tableView.topAnchor.constraint(equalTo: superview.topAnchor, constant: 5.0),
+            tableView.topAnchor.constraint(equalTo: superview.topAnchor),
             tableView.leadingAnchor.constraint(equalTo: superview.leadingAnchor),
             tableView.trailingAnchor.constraint(equalTo: superview.trailingAnchor),
             
