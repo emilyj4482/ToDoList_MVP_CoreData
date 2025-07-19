@@ -15,7 +15,11 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         guard let windowScene = (scene as? UIWindowScene) else { return }
         let window = UIWindow(windowScene: windowScene)
         window.backgroundColor = .systemBackground
-        window.rootViewController = UINavigationController(rootViewController: MainListViewController())
+        
+        let todoManager: TodoManager = .init()
+        let rootViewController = MainListViewController(todoManager: todoManager)
+        window.rootViewController = UINavigationController(rootViewController: rootViewController)
+        
         window.makeKeyAndVisible()
         self.window = window
     }
