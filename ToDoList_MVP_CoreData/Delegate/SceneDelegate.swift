@@ -16,8 +16,8 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         let window = UIWindow(windowScene: windowScene)
         window.backgroundColor = .systemBackground
         
-        let todoManager: TodoManager = .init()
-        let rootViewController = MainListViewController(todoManager: todoManager)
+        let repository: TodoRepository = .init()
+        let rootViewController = MainListViewController(repository: repository)
         window.rootViewController = UINavigationController(rootViewController: rootViewController)
         
         window.makeKeyAndVisible()

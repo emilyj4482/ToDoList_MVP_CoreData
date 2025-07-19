@@ -15,11 +15,11 @@ protocol MainListProtocol {
 
 final class MainListPresenter: NSObject {
     private let viewController: MainListProtocol
-    private let todoManaer: TodoManager
+    private let repository: TodoRepository
     
-    init(viewController: MainListProtocol, todoManager: TodoManager) {
+    init(viewController: MainListProtocol, repository: TodoRepository) {
         self.viewController = viewController
-        self.todoManaer = todoManager
+        self.repository = repository
     }
     
     func viewDidLoad() {

@@ -9,12 +9,12 @@ import UIKit
 
 class MainListViewController: UIViewController {
     
-    private lazy var presenter = MainListPresenter(viewController: self, todoManager: todoManager)
+    private lazy var presenter = MainListPresenter(viewController: self, repository: repository)
     private let containerView = MainListView()
-    private var todoManager: TodoManager
+    private var repository: TodoRepository
     
-    init(todoManager: TodoManager) {
-        self.todoManager = todoManager
+    init(repository: TodoRepository) {
+        self.repository = repository
         super.init(nibName: nil, bundle: nil)
     }
     
@@ -54,7 +54,7 @@ extension MainListViewController: MainListProtocol {
     }
     
     func presentAddListViewController() {
-        let addListViewController = AddListViewController(todoManager: todoManager)
+        let addListViewController = AddListViewController(repository: repository)
         present(addListViewController, animated: true)
     }
 }
@@ -70,5 +70,5 @@ extension MainListViewController: UITableViewDataSource, UITableViewDelegate {
 }
 
 #Preview {
-    MainListViewController(todoManager: TodoManager())
+    MainListViewController(repository: TodoRepository())
 }

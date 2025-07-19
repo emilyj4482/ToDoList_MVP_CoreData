@@ -13,10 +13,10 @@ protocol AddListProtocol {
 
 final class AddListPresenter: NSObject {
     private let viewController: AddListProtocol
-    private let todoManager: TodoManager
+    private let repository: TodoRepository
     
-    init(viewController: AddListProtocol, todoManager: TodoManager) {
+    init(viewController: AddListProtocol, repository: TodoRepository) {
         self.viewController = viewController
-        self.todoManager = todoManager
+        self.repository = repository
     }
 }

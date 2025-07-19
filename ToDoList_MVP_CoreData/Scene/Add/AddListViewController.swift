@@ -9,8 +9,8 @@ import UIKit
 
 class AddListViewController: UIViewController, AddListProtocol {
     
-    private lazy var presenter = AddListPresenter(viewController: self, todoManager: todoManager)
-    private var todoManager: TodoManager
+    private lazy var presenter = AddListPresenter(viewController: self, repository: repository)
+    private var repository: TodoRepository
     
     private lazy var leftBarButtonItem: UIBarButtonItem = {
         let barButtonItem = UIBarButtonItem(title: "Cancel", style: .plain, target: self, action: #selector(leftBarButtonTapped))
@@ -34,8 +34,8 @@ class AddListViewController: UIViewController, AddListProtocol {
         return textField
     }()
     
-    init(todoManager: TodoManager) {
-        self.todoManager = todoManager
+    init(repository: TodoRepository) {
+        self.repository = repository
         super.init(nibName: nil, bundle: nil)
     }
     
