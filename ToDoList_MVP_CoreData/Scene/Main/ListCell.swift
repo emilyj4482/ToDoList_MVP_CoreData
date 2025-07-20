@@ -50,17 +50,17 @@ final class ListCell: UITableViewCell {
         ])
     }
     
-//    func configure(list: List) {
-//        setupUI()
-//
-//        // Important list의 경우 icon을 star로 지정
-//        if list.id == 1 {
-//            listIcon.image = UIImage(systemName: "star.fill")
-//        } else {
-//            listIcon.image = UIImage(systemName: "checklist.checked")
-//        }
-//        
-//        listNameLabel.text = list.name
-//        taskCountLabel.text = "\(list.tasks?.count ?? 0)"
-//    }
+    func configure(list: ListEntity) {
+        setupUI()
+
+        // Important list의 경우 icon을 star로 지정
+        if list.orderIndex == 0 {
+            listIcon.image = UIImage(systemName: "star.fill")
+        } else {
+            listIcon.image = UIImage(systemName: "checklist.checked")
+        }
+        
+        listNameLabel.text = list.name
+        taskCountLabel.text = "\(list.tasks?.count ?? 0)"
+    }
 }

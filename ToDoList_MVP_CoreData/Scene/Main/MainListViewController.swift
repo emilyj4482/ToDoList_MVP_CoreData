@@ -57,15 +57,29 @@ extension MainListViewController: MainListProtocol {
         let addListViewController = AddListViewController(repository: repository)
         present(addListViewController, animated: true)
     }
+    
+    func reloadData() {
+        containerView.reloadData()
+    }
+    
+    func showError(_ error: Error) {
+        // TODO: error alert
+        print("[Error] \(error.localizedDescription)")
+    }
 }
 
 extension MainListViewController: UITableViewDataSource, UITableViewDelegate {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        0
+        presenter.numberOfRows()
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        UITableViewCell()
+        guard let cell = tableView.dequeueReusableCell(withIdentifier: ListCell.identifier, for: indexPath) as? ListCell else { return UITableViewCell() }
+        
+        let list = presenter.object(at: indexPath)
+        cell.configure(list: list)
+        
+        return cell
     }
 }
 

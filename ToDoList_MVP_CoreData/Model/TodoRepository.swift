@@ -11,6 +11,27 @@ import CoreData
 final class TodoRepository {
     private let coreDataManager = CoreDataManager.shared
     
+    var context: NSManagedObjectContext {
+        return coreDataManager.viewContext
+    }
+    
+    var listsFetchRequest: NSFetchRequest<ListEntity> {
+        let fetchRequest: NSFetchRequest<ListEntity> = ListEntity.fetchRequest()
+        fetchRequest.sortDescriptors = [NSSortDescriptor(key: "orderIndex", ascending: true)]
+        return fetchRequest
+    }
+    
+    // doesn't need async/await because : 1) fetching from viewContext is very quick 2) it's main thread operation
+    // doesn't need throws because : 1) fetch errors are genuinely rare 2) UI needs to handle empty state anyway - just returning empty array [] is better scenario
+    func fetchLists() -> [ListEntity] {
+        do {
+            return try context.fetch(listsFetchRequest)
+        } catch {
+            print("[Repository] Failed to fetch lists: \(error.localizedDescription)")
+            return []
+        }
+    }
+    
     func createList(name: String) async throws {
         let backgroundContext = coreDataManager.newBackgroundContext()
         
@@ -23,7 +44,7 @@ final class TodoRepository {
             let currentCount = try backgroundContext.count(for: fetchRequest)
             
             let list = ListEntity(context: backgroundContext)
-            list.name = name
+            list.name = processedName
             list.orderIndex = Int64(currentCount)
             
             try backgroundContext.save()
@@ -93,16 +114,13 @@ final class TodoRepository {
         }
     }
     
-    // doesn't need async/await because : 1) fetching from viewContext is very quick 2) it's main thread operation
-    // doesn't need throws because : 1) fetch errors are genuinely rare 2) UI needs to handle empty state anyway - just returning empty array [] is better scenario
-    func fetchLists() -> [ListEntity] {
-        let fetchRequest: NSFetchRequest<ListEntity> = ListEntity.fetchRequest()
+    func reorderListIndexes(for lists: [ListEntity]) throws {
+        for (index, item) in lists.enumerated() {
+            item.orderIndex = Int64(index)
+        }
         
-        do {
-            return try coreDataManager.viewContext.fetch(fetchRequest)
-        } catch {
-            print("[Repository] Failed to fetch lists: \(error.localizedDescription)")
-            return []
+        if context.hasChanges {
+            try context.save()
         }
     }
 }

@@ -90,6 +90,10 @@ class MainListView: UIView {
         ])
     }
     
+    func reloadData() {
+        tableView.reloadData()
+    }
+    
     @objc private func addListButtonTapped() {
         delegate?.addListButtonTapped()
     }
