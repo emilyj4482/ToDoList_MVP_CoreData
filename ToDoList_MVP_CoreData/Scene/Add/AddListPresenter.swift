@@ -8,7 +8,8 @@
 import Foundation
 
 protocol AddListProtocol {
-    
+    func setupUI()
+    func dismiss()
 }
 
 final class AddListPresenter: NSObject {
@@ -18,5 +19,18 @@ final class AddListPresenter: NSObject {
     init(viewController: AddListProtocol, repository: TodoRepository) {
         self.viewController = viewController
         self.repository = repository
+    }
+    
+    func viewDidLoad() {
+        viewController.setupUI()
+    }
+    
+    func leftBarButtonTapped() {
+        viewController.dismiss()
+    }
+    
+    func rightBarButtonTapped() {
+        // TODO: add list logic
+        viewController.dismiss()
     }
 }

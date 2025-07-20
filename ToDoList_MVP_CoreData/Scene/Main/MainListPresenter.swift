@@ -9,6 +9,7 @@ import Foundation
 import CoreData
 
 protocol MainListProtocol {
+    func setupNavigationBar()
     func setupUI()
     func setupContainerView()
     func presentAddListViewController()
@@ -37,6 +38,7 @@ final class MainListPresenter: NSObject {
     }
     
     func viewDidLoad() {
+        viewController.setupNavigationBar()
         viewController.setupUI()
         viewController.setupContainerView()
         loadData()

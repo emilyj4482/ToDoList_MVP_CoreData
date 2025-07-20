@@ -35,6 +35,11 @@ extension MainListViewController: MainListViewDelegate {
 }
 
 extension MainListViewController: MainListProtocol {
+    func setupNavigationBar() {
+        navigationItem.title = "ToDoList"
+        navigationController?.navigationBar.prefersLargeTitles = true
+    }
+    
     func setupUI() {
         view.backgroundColor = .systemBackground
         view.addSubviews([containerView])
@@ -54,7 +59,7 @@ extension MainListViewController: MainListProtocol {
     }
     
     func presentAddListViewController() {
-        let addListViewController = AddListViewController(repository: repository)
+        let addListViewController = UINavigationController(rootViewController: AddListViewController(repository: repository))
         present(addListViewController, animated: true)
     }
     

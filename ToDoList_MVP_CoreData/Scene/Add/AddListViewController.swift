@@ -24,7 +24,7 @@ class AddListViewController: UIViewController, AddListProtocol {
         return barButtonItem
     }()
     
-    private lazy var textField: UITextField = {
+    private let textField: UITextField = {
         let textField = UITextField()
         
         textField.placeholder = "Untitled list"
@@ -45,18 +45,36 @@ class AddListViewController: UIViewController, AddListProtocol {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        setupUI()
+        presenter.viewDidLoad()
     }
     
-    private func setupUI() {
+    func setupUI() {
         view.backgroundColor = .systemBackground
+        
+        navigationItem.leftBarButtonItem = leftBarButtonItem
+        navigationItem.rightBarButtonItem = rightBarButtonItem
+        
+        view.addSubviews([textField])
+        
+        let superview = view.safeAreaLayoutGuide
+        let offset: CGFloat = 16.0
+        
+        NSLayoutConstraint.activate([
+            textField.topAnchor.constraint(equalTo: superview.topAnchor, constant: offset),
+            textField.leadingAnchor.constraint(equalTo: superview.leadingAnchor, constant: offset),
+            textField.trailingAnchor.constraint(equalTo: superview.trailingAnchor, constant: -offset)
+        ])
+    }
+    
+    func dismiss() {
+        dismiss(animated: true)
     }
     
     @objc private func leftBarButtonTapped() {
-        
+        presenter.leftBarButtonTapped()
     }
     
     @objc private func rightBarButtonTapped() {
-        
+        presenter.rightBarButtonTapped()
     }
 }
