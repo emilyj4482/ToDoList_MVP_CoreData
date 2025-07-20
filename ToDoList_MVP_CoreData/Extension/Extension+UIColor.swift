@@ -8,5 +8,5 @@
 import UIKit
 
 extension UIColor {
-    static var mainTintColor = UIColor.systemMint
+    static let mainTintColor = UIColor.systemMint
 }

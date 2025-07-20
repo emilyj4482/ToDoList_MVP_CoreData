@@ -1,13 +1,15 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <model type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="23788.4" systemVersion="24F74" minimumToolsVersion="Automatic" sourceLanguage="Swift" usedWithSwiftData="YES" userDefinedModelVersionIdentifier="">
-    <entity name="List" representedClassName="List" syncable="YES" codeGenerationType="class">
+    <entity name="ListEntity" representedClassName="ListEntity" syncable="YES" codeGenerationType="class">
         <attribute name="name" attributeType="String"/>
-        <relationship name="tasks" optional="YES" toMany="YES" deletionRule="Cascade" ordered="YES" destinationEntity="Task" inverseName="list" inverseEntity="Task"/>
+        <attribute name="orderIndex" optional="YES" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES"/>
+        <relationship name="tasks" optional="YES" toMany="YES" deletionRule="Cascade" ordered="YES" destinationEntity="TaskEntity" inverseName="list" inverseEntity="TaskEntity"/>
     </entity>
-    <entity name="Task" representedClassName="Task" syncable="YES" codeGenerationType="class">
+    <entity name="TaskEntity" representedClassName="TaskEntity" syncable="YES" codeGenerationType="class">
         <attribute name="isDone" attributeType="Boolean" usesScalarValueType="YES"/>
         <attribute name="isImportant" attributeType="Boolean" usesScalarValueType="YES"/>
+        <attribute name="orderIndex" optional="YES" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES"/>
         <attribute name="title" attributeType="String"/>
-        <relationship name="list" toMany="YES" deletionRule="Nullify" destinationEntity="List" inverseName="tasks" inverseEntity="List"/>
+        <relationship name="list" toMany="YES" deletionRule="Nullify" destinationEntity="ListEntity" inverseName="tasks" inverseEntity="ListEntity"/>
     </entity>
 </model>

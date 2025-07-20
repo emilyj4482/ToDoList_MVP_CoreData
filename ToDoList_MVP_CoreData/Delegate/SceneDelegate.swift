@@ -22,6 +22,14 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         
         window.makeKeyAndVisible()
         self.window = window
+        
+        Task {
+            do {
+                try await repository.createImportantListIfNeeded()
+            } catch {
+                print("[Repository] create Important list failed : \(error)")
+            }
+        }
     }
 
     func sceneDidDisconnect(_ scene: UIScene) {

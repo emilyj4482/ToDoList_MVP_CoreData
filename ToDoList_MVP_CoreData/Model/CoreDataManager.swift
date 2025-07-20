@@ -13,7 +13,7 @@ final class CoreDataManager {
     static let shared = CoreDataManager()
     private init() {}
     
-    lazy var container: NSPersistentContainer = {
+    private lazy var persistentContainer: NSPersistentContainer = {
         let container = NSPersistentContainer(name: Key.container)
         
         container.loadPersistentStores { _, error in
@@ -23,19 +23,19 @@ final class CoreDataManager {
         }
         
         container.viewContext.automaticallyMergesChangesFromParent = true
-        container.viewContext.mergePolicy = NSMergeByPropertyObjectTrumpMergePolicy
+        container.viewContext.mergePolicy = NSMergePolicy.mergeByPropertyObjectTrump
         
         return container
         
     }()
     
     var viewContext: NSManagedObjectContext {
-        return container.viewContext
+        return persistentContainer.viewContext
     }
     
     func newBackgroundContext() -> NSManagedObjectContext {
-        let context = container.newBackgroundContext()
-        context.mergePolicy = NSMergeByPropertyObjectTrumpMergePolicy
+        let context = persistentContainer.newBackgroundContext()
+        context.mergePolicy = NSMergePolicy.mergeByPropertyObjectTrump
         return context
     }
 }
