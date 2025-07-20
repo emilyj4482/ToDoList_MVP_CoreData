@@ -14,6 +14,9 @@ final class TodoRepository {
     func createList(name: String) async throws {
         let backgroundContext = coreDataManager.newBackgroundContext()
         
+        // list name (중복)검사
+        let processedName = try await processListName(name)
+        
         try await backgroundContext.perform {
             // 현재 Entity 개수 fetch
             let fetchRequest: NSFetchRequest<ListEntity> = ListEntity.fetchRequest()
@@ -30,6 +33,9 @@ final class TodoRepository {
     func renameList(objectID: NSManagedObjectID, newName: String) async throws {
         let backgroundContext = coreDataManager.newBackgroundContext()
         
+        // 중복 검사
+        let processedName = try await processListName(newName)
+        
         try await backgroundContext.perform {
             let managedObject = try backgroundContext.existingObject(with: objectID)
             
@@ -37,8 +43,38 @@ final class TodoRepository {
                 throw CoreDataError.castingObjectFailed
             }
             
-            list.name = newName
+            list.name = processedName
             try backgroundContext.save()
+        }
+    }
+    
+    private func processListName(_ input: String) async throws -> String {
+        // 1. 공백 제거
+        let trimmedInput = input.trim
+        // 2. 완전 공백일 시 default name 부여
+        let baseName = trimmedInput.isEmpty ? "Untitled List" : trimmedInput
+        // 3. 기존 이름들 fetch
+        let existingNames = try await getExistingListNames()
+        // 4. 중복 검사 : 중복 시 (n) 붙이고 반환
+        var count = 1
+        var finalName = baseName
+        
+        while existingNames.contains(finalName) {
+            finalName = "\(baseName) (\(count))"
+            count += 1
+        }
+        
+        return finalName
+    }
+    
+    private func getExistingListNames() async throws -> [String] {
+        let backgroundContext = coreDataManager.newBackgroundContext()
+        
+        return try await backgroundContext.perform {
+            let fetchRequest: NSFetchRequest<ListEntity> = ListEntity.fetchRequest()
+            
+            let results = try backgroundContext.fetch(fetchRequest)
+            return results.compactMap { $0.name }
         }
     }
     
