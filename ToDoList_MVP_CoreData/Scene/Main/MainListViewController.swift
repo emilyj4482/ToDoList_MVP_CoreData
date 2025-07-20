@@ -82,7 +82,3 @@ extension MainListViewController: UITableViewDataSource, UITableViewDelegate {
         return cell
     }
 }
-
-#Preview {
-    MainListViewController(repository: TodoRepository())
-}
