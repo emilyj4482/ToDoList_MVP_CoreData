@@ -70,11 +70,26 @@ class AddListViewController: UIViewController, AddListProtocol {
         dismiss(animated: true)
     }
     
+    func showAlert() {
+        let alert = UIAlertController(
+            title: "Reserved Name",
+            message: "\"Important\" cannot be used. Please choose a different one.",
+            preferredStyle: .alert
+        )
+        
+        let okayButton = UIAlertAction(title: "OK", style: .default)
+        
+        alert.addAction(okayButton)
+        present(alert, animated: true)
+    }
+    
     @objc private func leftBarButtonTapped() {
         presenter.leftBarButtonTapped()
     }
     
     @objc private func rightBarButtonTapped() {
-        presenter.rightBarButtonTapped()
+        if let input = textField.text {
+            presenter.rightBarButtonTapped(input)
+        }
     }
 }

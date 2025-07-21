@@ -10,6 +10,7 @@ import Foundation
 protocol AddListProtocol {
     func setupUI()
     func dismiss()
+    func showAlert()
 }
 
 final class AddListPresenter: NSObject {
@@ -29,8 +30,14 @@ final class AddListPresenter: NSObject {
         viewController.dismiss()
     }
     
-    func rightBarButtonTapped() {
-        // TODO: add list logic
-        viewController.dismiss()
+    func rightBarButtonTapped(_ input: String) {
+        if input.trim == "Important" {
+            viewController.showAlert()
+        } else {
+            Task {
+                try await repository.createList(name: input)
+            }
+            viewController.dismiss()
+        }
     }
 }
