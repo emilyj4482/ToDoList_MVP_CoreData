@@ -15,6 +15,12 @@ protocol MainListProtocol {
     func presentAddListViewController()
     func reloadData()
     func showError(_ error: Error)
+    func showActionSheet(indexPath: IndexPath)
+    func tableViewBeginUpdates()
+    func tableViewEndUpdates()
+    func tableViewInsertRows(at indexPaths: [IndexPath])
+    func tableViewReloadRows(at indexPaths: [IndexPath])
+    func tableViewDeleteRows(at indexPaths: [IndexPath])
 }
 
 final class MainListPresenter: NSObject {
@@ -68,8 +74,46 @@ extension MainListPresenter {
     func object(at indexPath: IndexPath) -> ListEntity {
         return fetchedResultsController.object(at: indexPath)
     }
+    
+    func showActionSheet(indexPath: IndexPath) {
+        viewController.showActionSheet(indexPath: indexPath)
+    }
+    
+    func deleteList(at indexPath: IndexPath) async {
+        let listEntity = fetchedResultsController.object(at: indexPath)
+        do {
+            try await repository.deleteList(objectID: listEntity.objectID)
+        } catch {
+            viewController.showError(error)
+        }
+    }
 }
 
 extension MainListPresenter: NSFetchedResultsControllerDelegate {
+    func controllerWillChangeContent(_ controller: NSFetchedResultsController<any NSFetchRequestResult>) {
+        viewController.tableViewBeginUpdates()
+    }
     
+    func controller(_ controller: NSFetchedResultsController<any NSFetchRequestResult>, didChange anObject: Any, at indexPath: IndexPath?, for type: NSFetchedResultsChangeType, newIndexPath: IndexPath?) {
+        switch type {
+        case .insert:
+            if let newIndexPath = newIndexPath {
+                viewController.tableViewInsertRows(at: [newIndexPath])
+            }
+        case .update:
+            if let indexPath = indexPath {
+                viewController.tableViewReloadRows(at: [indexPath])
+            }
+        case .delete:
+            if let indexPath = indexPath {
+                viewController.tableViewDeleteRows(at: [indexPath])
+            }
+        default:
+            break
+        }
+    }
+    
+    func controllerDidChangeContent(_ controller: NSFetchedResultsController<any NSFetchRequestResult>) {
+        viewController.tableViewEndUpdates()
+    }
 }

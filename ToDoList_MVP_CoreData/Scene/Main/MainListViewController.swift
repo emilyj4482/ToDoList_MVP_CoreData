@@ -68,8 +68,57 @@ extension MainListViewController: MainListProtocol {
     }
     
     func showError(_ error: Error) {
-        // TODO: error alert
         print("[Error] \(error.localizedDescription)")
+        
+        let alert = UIAlertController(
+            title: "Error",
+            message: "Data could not be loaded. Please try again later.",
+            preferredStyle: .alert
+        )
+        
+        let okayButton = UIAlertAction(title: "OK", style: .default)
+        
+        alert.addAction(okayButton)
+        present(alert, animated: true)
+    }
+    
+    func showActionSheet(indexPath: IndexPath) {
+        let actionSheet = UIAlertController(
+            title: "Delete List",
+            message: "Are you sure you want to delete this list?",
+            preferredStyle: .actionSheet)
+        
+        let yesButton = UIAlertAction(title: "Yes", style: .default) { [weak self] _ in
+            Task {
+                await self?.presenter.deleteList(at: indexPath)
+            }
+        }
+        
+        let cancelButton = UIAlertAction(title: "Cancel", style: .cancel)
+        
+        actionSheet.addAction(yesButton)
+        actionSheet.addAction(cancelButton)
+        present(actionSheet, animated: true)
+    }
+    
+    func tableViewBeginUpdates() {
+        containerView.tableViewBeginUpdates()
+    }
+    
+    func tableViewEndUpdates() {
+        containerView.tableViewEndUpdates()
+    }
+    
+    func tableViewInsertRows(at indexPaths: [IndexPath]) {
+        containerView.tableViewInsertRows(at: indexPaths)
+    }
+    
+    func tableViewReloadRows(at indexPaths: [IndexPath]) {
+        containerView.tableViewReloadRows(at: indexPaths)
+    }
+    
+    func tableViewDeleteRows(at indexPaths: [IndexPath]) {
+        containerView.tableViewDeleteRows(at: indexPaths)
     }
 }
 
@@ -85,5 +134,27 @@ extension MainListViewController: UITableViewDataSource, UITableViewDelegate {
         cell.configure(list: list)
         
         return cell
+    }
+    
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        
+    }
+    
+    func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
+        // Important list는 삭제 방지
+        guard indexPath.row != 0 else { return nil }
+        
+        let deleteAction = UIContextualAction(style: .destructive, title: "") { [weak self] (action, view, completionHandler) in
+            
+            self?.presenter.showActionSheet(indexPath: indexPath)
+            
+            completionHandler(true)
+        }
+        
+        deleteAction.image = UIImage(systemName: "trash")
+        
+        let swipe = UISwipeActionsConfiguration(actions: [deleteAction])
+        
+        return swipe
     }
 }
