@@ -9,4 +9,5 @@ import Foundation
 
 struct Keys {
     static let fetchedResultsControllerListCacheName = "ListCache"
+    static let fetchedResultsControllerTaskCacheName = "TaskCache"
 }

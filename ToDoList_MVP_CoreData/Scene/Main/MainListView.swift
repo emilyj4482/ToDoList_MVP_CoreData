@@ -39,6 +39,7 @@ class MainListView: UIView {
         let button = UIButton()
         
         button.setImage(UIImage(systemName: "plus"), for: .normal)
+        button.adjustsImageWhenHighlighted = false
         button.setTitle(" New List", for: .normal)
         button.tintColor = .mainTintColor
         button.setTitleColor(.mainTintColor, for: .normal)

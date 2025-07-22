@@ -30,7 +30,7 @@ final class MainListPresenter: NSObject {
     private lazy var fetchedResultsController: NSFetchedResultsController<ListEntity> = {
         let controller = NSFetchedResultsController(
             fetchRequest: repository.listsFetchRequest,
-            managedObjectContext: repository.context,
+            managedObjectContext: repository.viewContext,
             sectionNameKeyPath: nil,
             cacheName: Keys.fetchedResultsControllerListCacheName
         )
@@ -48,7 +48,7 @@ final class MainListPresenter: NSObject {
         viewController.setupUI()
         viewController.setupNavigationBar()
         viewController.setupContainerView()
-        loadData()
+        loadLists()
     }
     
     func addListButtonTapped() {
@@ -65,7 +65,7 @@ final class MainListPresenter: NSObject {
 }
 
 extension MainListPresenter {
-    func loadData() {
+    func loadLists() {
         do {
             try fetchedResultsController.performFetch()
             viewController.reloadData()

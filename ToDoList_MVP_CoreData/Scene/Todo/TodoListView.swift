@@ -8,7 +8,7 @@
 import UIKit
 
 protocol TodoListViewDelegate: AnyObject {
-    
+    func addTaskButtonTapped()
 }
 
 class TodoListView: UIView {
@@ -30,6 +30,7 @@ class TodoListView: UIView {
         let button = UIButton()
         
         button.setImage(UIImage(systemName: "plus"), for: .normal)
+        button.adjustsImageWhenHighlighted = false
         button.setTitle(" Add a Task", for: .normal)
         button.tintColor = .mainTintColor
         button.setTitleColor(.mainTintColor, for: .normal)
@@ -82,6 +83,6 @@ class TodoListView: UIView {
     }
     
     @objc private func addTaskButtonTapped() {
-        
+        delegate?.addTaskButtonTapped()
     }
 }

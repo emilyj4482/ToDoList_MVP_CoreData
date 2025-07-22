@@ -11,7 +11,7 @@ import CoreData
 final class TodoRepository {
     private let coreDataManager = CoreDataManager.shared
     
-    var context: NSManagedObjectContext {
+    var viewContext: NSManagedObjectContext {
         return coreDataManager.viewContext
     }
     
@@ -21,11 +21,18 @@ final class TodoRepository {
         return fetchRequest
     }
     
+    func tasksFetchRequest(for list: ListEntity) -> NSFetchRequest<TaskEntity> {
+        let fetchRequest: NSFetchRequest<TaskEntity> = TaskEntity.fetchRequest()
+        fetchRequest.sortDescriptors = [NSSortDescriptor(key: "createdDate", ascending: true)]
+        fetchRequest.predicate = NSPredicate(format: "list == %@", list)
+        return fetchRequest
+    }
+    
     // doesn't need async/await because : 1) fetching from viewContext is very quick 2) it's main thread operation
     // doesn't need throws because : 1) fetch errors are genuinely rare 2) UI needs to handle empty state anyway - just returning empty array [] is better scenario
     func fetchLists() -> [ListEntity] {
         do {
-            return try context.fetch(listsFetchRequest)
+            return try viewContext.fetch(listsFetchRequest)
         } catch {
             print("[Repository] Failed to fetch lists: \(error.localizedDescription)")
             return []
@@ -37,7 +44,7 @@ final class TodoRepository {
         fetchRequest.sortDescriptors = [NSSortDescriptor(key: "orderIndex", ascending: true)]
         fetchRequest.predicate = NSPredicate(format: "orderIndex == %d", index)
         do {
-            return try context.fetch(fetchRequest).first
+            return try viewContext.fetch(fetchRequest).first
         } catch {
             print("[Repository] Failed to fetch list: \(error.localizedDescription)")
             return nil
@@ -131,8 +138,8 @@ final class TodoRepository {
             item.orderIndex = Int64(index)
         }
         
-        if context.hasChanges {
-            try context.save()
+        if viewContext.hasChanges {
+            try viewContext.save()
         }
     }
 }

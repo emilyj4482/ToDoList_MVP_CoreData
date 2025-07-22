@@ -9,11 +9,13 @@ import UIKit
 
 class TodoListViewController: UIViewController {
     
-    private lazy var presenter = TodoListPresenter(viewController: self, repository: repository)
+    private lazy var presenter = TodoListPresenter(viewController: self, repository: repository, list: list)
     private let containerView = TodoListView()
     private var repository: TodoRepository
     
     let list: ListEntity
+    
+    private lazy var rightBarButtonItem = UIBarButtonItem(title: "Edit", style: .plain, target: self, action: #selector(rightBarButtonTapped))
     
     init(repository: TodoRepository, list: ListEntity) {
         self.repository = repository
@@ -31,9 +33,16 @@ class TodoListViewController: UIViewController {
     }
 }
 
+extension TodoListViewController: TodoListViewDelegate {
+    func addTaskButtonTapped() {
+        presenter.addTaskButtonTapped()
+    }
+}
+
 extension TodoListViewController: TodoListProtocol {
     func setupNavigationBar() {
         navigationItem.title = list.name
+        navigationItem.rightBarButtonItem = rightBarButtonItem
     }
     
     func setupUI() {
@@ -50,7 +59,29 @@ extension TodoListViewController: TodoListProtocol {
         ])
     }
     
-    func setupAddTaskButton() {
-        containerView.hideAddTaskButton(if: list.orderIndex == 0)
+    func setupContainerView() {
+        containerView.inject(delegate: self, tableViewDataSource: self, tableViewDelegate: self)
+    }
+    
+    func hideButtonsIfNeeded() {
+        let isHidden = list.orderIndex == 0
+        containerView.hideAddTaskButton(if: isHidden)
+        rightBarButtonItem.isHidden = isHidden
+    }
+    
+    @objc private func rightBarButtonTapped() {
+        presenter.rightBarButtonTapped()
+    }
+}
+
+extension TodoListViewController: UITableViewDataSource, UITableViewDelegate {
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        presenter.numberOfRows()
+    }
+    
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        guard let cell = tableView.dequeueReusableCell(withIdentifier: TaskCell.identifier, for: indexPath) as? TaskCell else { return UITableViewCell() }
+        
+        return cell
     }
 }
