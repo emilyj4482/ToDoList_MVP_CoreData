@@ -33,9 +33,11 @@ final class TodoRepository {
     }
     
     func fetchList(with index: Int) -> ListEntity? {
-        listsFetchRequest.predicate = NSPredicate(format: "orderIndex == %d", index)
+        let fetchRequest: NSFetchRequest<ListEntity> = ListEntity.fetchRequest()
+        fetchRequest.sortDescriptors = [NSSortDescriptor(key: "orderIndex", ascending: true)]
+        fetchRequest.predicate = NSPredicate(format: "orderIndex == %d", index)
         do {
-            return try context.fetch(listsFetchRequest).first
+            return try context.fetch(fetchRequest).first
         } catch {
             print("[Repository] Failed to fetch list: \(error.localizedDescription)")
             return nil
