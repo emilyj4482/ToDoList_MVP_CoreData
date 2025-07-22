@@ -82,6 +82,30 @@ class TodoListView: UIView {
         addTaskButton.isHidden = isImportantList
     }
     
+    func reloadData() {
+        tableView.reloadData()
+    }
+    
+    func tableViewBeginUpdates() {
+        tableView.beginUpdates()
+    }
+    
+    func tableViewEndUpdates() {
+        tableView.endUpdates()
+    }
+    
+    func tableViewInsertRows(at indexPaths: [IndexPath]) {
+        tableView.insertRows(at: indexPaths, with: .automatic)
+    }
+    
+    func tableViewReloadRows(at indexPaths: [IndexPath]) {
+        tableView.reloadRows(at: indexPaths, with: .automatic)
+    }
+    
+    func tableViewDeleteRows(at indexPaths: [IndexPath]) {
+        tableView.deleteRows(at: indexPaths, with: .automatic)
+    }
+    
     @objc private func addTaskButtonTapped() {
         delegate?.addTaskButtonTapped()
     }

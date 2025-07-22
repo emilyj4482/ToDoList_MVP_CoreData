@@ -30,6 +30,7 @@ final class TodoRepository {
     
     // doesn't need async/await because : 1) fetching from viewContext is very quick 2) it's main thread operation
     // doesn't need throws because : 1) fetch errors are genuinely rare 2) UI needs to handle empty state anyway - just returning empty array [] is better scenario
+    // MARK: fetchedResultsController.performFetch()를 사용하기 때문에 호출될 일이 없다. 나중에 다른 경우로 호출이 필요할 경우를 대비해 코드는 살려둠
     func fetchLists() -> [ListEntity] {
         do {
             return try viewContext.fetch(listsFetchRequest)
@@ -133,6 +134,7 @@ final class TodoRepository {
         }
     }
     
+    // MARK: 아직 사용하지 않음. List 정렬 기능 구현 시 사용
     func reorderListIndexes(for lists: [ListEntity]) throws {
         for (index, item) in lists.enumerated() {
             item.orderIndex = Int64(index)
@@ -172,6 +174,77 @@ extension TodoRepository {
         return try await backgroundContext.perform {
             return try backgroundContext.fetch(fetchRequest).first
             
+        }
+    }
+}
+
+/// TaskEntity CRUD
+extension TodoRepository {
+    func fetchTasks(for list: ListEntity) -> [TaskEntity] {
+        do {
+            return try viewContext.fetch(tasksFetchRequest(for: list))
+        } catch {
+            print("[Repository] Failed to fetch tasks: \(error.localizedDescription)")
+            return []
+        }
+    }
+    
+    func createTask(title: String) async throws {
+        let backgroundContext = coreDataManager.newBackgroundContext()
+        
+        try await backgroundContext.perform {
+            let task = TaskEntity(context: backgroundContext)
+            task.title = title
+            task.createdDate = Date()
+            task.isDone = false
+            task.isImportant = false
+            
+            try backgroundContext.save()
+        }
+    }
+    
+    func toggleTaskDone(objectID: NSManagedObjectID, isDone: Bool) async throws {
+        let backgroundContext = coreDataManager.newBackgroundContext()
+        
+        try await backgroundContext.perform {
+            let managedObject = try backgroundContext.existingObject(with: objectID)
+            
+            guard let task = managedObject as? TaskEntity else {
+                throw CoreDataError.castingObjectFailed
+            }
+            
+            task.isDone = isDone
+            try backgroundContext.save()
+        }
+    }
+    
+    func toggleTaskImportant(objectID: NSManagedObjectID, isImportant: Bool) async throws {
+        let backgroundContext = coreDataManager.newBackgroundContext()
+        
+        try await backgroundContext.perform {
+            let managedObject = try backgroundContext.existingObject(with: objectID)
+            
+            guard let task = managedObject as? TaskEntity else {
+                throw CoreDataError.castingObjectFailed
+            }
+            
+            task.isImportant = isImportant
+            try backgroundContext.save()
+        }
+    }
+    
+    func deleteTask(objectID: NSManagedObjectID) async throws {
+        let backgroundContext = coreDataManager.newBackgroundContext()
+        
+        try await backgroundContext.perform {
+            let managedObject = try backgroundContext.existingObject(with: objectID)
+            
+            guard let task = managedObject as? TaskEntity else {
+                throw CoreDataError.castingObjectFailed
+            }
+            
+            backgroundContext.delete(task)
+            try backgroundContext.save()
         }
     }
 }

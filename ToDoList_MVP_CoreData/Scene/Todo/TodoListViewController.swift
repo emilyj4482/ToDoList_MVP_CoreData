@@ -31,6 +31,10 @@ class TodoListViewController: UIViewController {
         super.viewDidLoad()
         presenter.viewDidLoad()
     }
+    
+    @objc private func rightBarButtonTapped() {
+        presenter.rightBarButtonTapped()
+    }
 }
 
 extension TodoListViewController: TodoListViewDelegate {
@@ -69,8 +73,43 @@ extension TodoListViewController: TodoListProtocol {
         rightBarButtonItem.isHidden = isHidden
     }
     
-    @objc private func rightBarButtonTapped() {
-        presenter.rightBarButtonTapped()
+    func reloadData() {
+        containerView.reloadData()
+    }
+    
+    func showError(_ error: any Error) {
+        print("[Error] \(error.localizedDescription)")
+        
+        let alert = UIAlertController(
+            title: "Error",
+            message: "Data could not be loaded. Please try again later.",
+            preferredStyle: .alert
+        )
+        
+        let okayButton = UIAlertAction(title: "OK", style: .default)
+        
+        alert.addAction(okayButton)
+        present(alert, animated: true)
+    }
+    
+    func tableViewBeginUpdates() {
+        containerView.tableViewBeginUpdates()
+    }
+    
+    func tableViewEndUpdates() {
+        containerView.tableViewEndUpdates()
+    }
+    
+    func tableViewInsertRows(at indexPaths: [IndexPath]) {
+        containerView.tableViewInsertRows(at: indexPaths)
+    }
+    
+    func tableViewReloadRows(at indexPaths: [IndexPath]) {
+        containerView.tableViewReloadRows(at: indexPaths)
+    }
+    
+    func tableViewDeleteRows(at indexPaths: [IndexPath]) {
+        containerView.tableViewDeleteRows(at: indexPaths)
     }
 }
 
@@ -81,6 +120,9 @@ extension TodoListViewController: UITableViewDataSource, UITableViewDelegate {
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         guard let cell = tableView.dequeueReusableCell(withIdentifier: TaskCell.identifier, for: indexPath) as? TaskCell else { return UITableViewCell() }
+        
+        let task = presenter.object(at: indexPath)
+        cell.configure(with: task)
         
         return cell
     }

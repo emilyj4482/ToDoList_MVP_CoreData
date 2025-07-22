@@ -10,5 +10,7 @@ import UIKit
 class TaskCell: UITableViewCell {
     static let identifier = String(describing: TaskCell.self)
     
-    
+    func configure(with task: TaskEntity) {
+        
+    }
 }

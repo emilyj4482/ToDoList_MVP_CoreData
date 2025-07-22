@@ -137,7 +137,7 @@ extension MainListViewController: UITableViewDataSource, UITableViewDelegate {
         guard let cell = tableView.dequeueReusableCell(withIdentifier: ListCell.identifier, for: indexPath) as? ListCell else { return UITableViewCell() }
         
         let list = presenter.object(at: indexPath)
-        cell.configure(list: list)
+        cell.configure(with: list)
         
         return cell
     }

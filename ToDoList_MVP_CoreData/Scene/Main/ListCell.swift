@@ -50,7 +50,7 @@ final class ListCell: UITableViewCell {
         ])
     }
     
-    func configure(list: ListEntity) {
+    func configure(with list: ListEntity) {
         setupUI()
 
         // Important list의 경우 icon을 star로 지정

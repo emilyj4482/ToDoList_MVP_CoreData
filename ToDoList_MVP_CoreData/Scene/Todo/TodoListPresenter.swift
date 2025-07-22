@@ -13,6 +13,13 @@ protocol TodoListProtocol {
     func setupUI()
     func hideButtonsIfNeeded()
     func setupContainerView()
+    func reloadData()
+    func showError(_ error: Error)
+    func tableViewBeginUpdates()
+    func tableViewEndUpdates()
+    func tableViewInsertRows(at indexPaths: [IndexPath])
+    func tableViewReloadRows(at indexPaths: [IndexPath])
+    func tableViewDeleteRows(at indexPaths: [IndexPath])
 }
 
 class TodoListPresenter: NSObject {
@@ -62,14 +69,56 @@ class TodoListPresenter: NSObject {
 
 extension TodoListPresenter {
     func loadTasks() {
-        
+        do {
+            try fetchedResultsController.performFetch()
+            viewController.reloadData()
+        } catch {
+            viewController.showError(error)
+        }
     }
     
     func numberOfRows() -> Int {
-        0
+        guard let section = fetchedResultsController.sections?.first else { return 0 }
+        
+        return section.numberOfObjects
+    }
+    
+    func object(at indexPath: IndexPath) -> TaskEntity {
+        return fetchedResultsController.object(at: indexPath)
     }
 }
 
 extension TodoListPresenter: NSFetchedResultsControllerDelegate {
+    func controllerWillChangeContent(_ controller: NSFetchedResultsController<any NSFetchRequestResult>) {
+        Task { @MainActor in
+            viewController.tableViewBeginUpdates()
+        }
+    }
     
+    func controller(_ controller: NSFetchedResultsController<any NSFetchRequestResult>, didChange anObject: Any, at indexPath: IndexPath?, for type: NSFetchedResultsChangeType, newIndexPath: IndexPath?) {
+        Task { @MainActor in
+            switch type {
+            case .insert:
+                if let newIndexPath = newIndexPath {
+                    viewController.tableViewInsertRows(at: [newIndexPath])
+                }
+            case .update:
+                if let indexPath = indexPath {
+                    viewController.tableViewReloadRows(at: [indexPath])
+                }
+            case .delete:
+                if let indexPath = indexPath {
+                    viewController.tableViewDeleteRows(at: [indexPath])
+                }
+            default:
+                break
+            }
+        }
+    }
+    
+    func controllerDidChangeContent(_ controller: NSFetchedResultsController<any NSFetchRequestResult>) {
+        Task { @MainActor in
+            viewController.tableViewEndUpdates()
+        }
+    }
 }
