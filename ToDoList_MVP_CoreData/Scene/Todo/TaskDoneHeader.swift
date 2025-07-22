@@ -8,5 +8,5 @@
 import UIKit
 
 class TaskDoneHeader: UITableViewHeaderFooterView {
-    
+    static let identifier = String(describing: TaskDoneHeader.self)
 }

@@ -10,6 +10,7 @@ import UIKit
 protocol TodoListProtocol {
     func setupNavigationBar()
     func setupUI()
+    func setupAddTaskButton()
 }
 
 class TodoListPresenter: NSObject {
@@ -23,9 +24,7 @@ class TodoListPresenter: NSObject {
     
     func viewDidLoad() {
         viewController.setupUI()
-    }
-    
-    func viewWillAppear() {
         viewController.setupNavigationBar()
+        viewController.setupAddTaskButton()
     }
 }

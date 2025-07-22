@@ -10,6 +10,7 @@ import UIKit
 class TodoListViewController: UIViewController {
     
     private lazy var presenter = TodoListPresenter(viewController: self, repository: repository)
+    private let containerView = TodoListView()
     private var repository: TodoRepository
     
     let list: ListEntity
@@ -28,20 +29,28 @@ class TodoListViewController: UIViewController {
         super.viewDidLoad()
         presenter.viewDidLoad()
     }
-    
-    override func viewWillAppear(_ animated: Bool) {
-        super.viewWillAppear(animated)
-        presenter.viewWillAppear()
-    }
 }
 
 extension TodoListViewController: TodoListProtocol {
     func setupNavigationBar() {
         navigationItem.title = list.name
-        navigationController?.navigationBar.prefersLargeTitles = false
     }
     
     func setupUI() {
         view.backgroundColor = .systemBackground
+        view.addSubviews([containerView])
+        
+        let safeArea = view.safeAreaLayoutGuide
+        
+        NSLayoutConstraint.activate([
+            containerView.topAnchor.constraint(equalTo: safeArea.topAnchor),
+            containerView.bottomAnchor.constraint(equalTo: safeArea.bottomAnchor),
+            containerView.leadingAnchor.constraint(equalTo: safeArea.leadingAnchor),
+            containerView.trailingAnchor.constraint(equalTo: safeArea.trailingAnchor)
+        ])
+    }
+    
+    func setupAddTaskButton() {
+        containerView.hideAddTaskButton(if: list.orderIndex == 0)
     }
 }

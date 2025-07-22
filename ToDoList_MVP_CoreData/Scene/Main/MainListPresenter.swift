@@ -46,12 +46,9 @@ final class MainListPresenter: NSObject {
     
     func viewDidLoad() {
         viewController.setupUI()
+        viewController.setupNavigationBar()
         viewController.setupContainerView()
         loadData()
-    }
-    
-    func viewWillAppear() {
-        viewController.setupNavigationBar()
     }
     
     func addListButtonTapped() {

@@ -26,11 +26,6 @@ class MainListViewController: UIViewController {
         super.viewDidLoad()
         presenter.viewDidLoad()
     }
-    
-    override func viewWillAppear(_ animated: Bool) {
-        super.viewWillAppear(animated)
-        presenter.viewWillAppear()
-    }
 }
 
 extension MainListViewController: MainListViewDelegate {
@@ -42,6 +37,7 @@ extension MainListViewController: MainListViewDelegate {
 extension MainListViewController: MainListProtocol {
     func setupNavigationBar() {
         navigationItem.title = "ToDoList"
+        navigationController?.navigationBar.tintColor = .mainTintColor
         navigationController?.navigationBar.prefersLargeTitles = true
     }
     
