@@ -13,6 +13,7 @@ protocol MainListProtocol {
     func setupUI()
     func setupContainerView()
     func presentAddListViewController()
+    func pushToTodoListViewController(with list: ListEntity)
     func reloadData()
     func showError(_ error: Error)
     func showActionSheet(indexPath: IndexPath)
@@ -44,14 +45,25 @@ final class MainListPresenter: NSObject {
     }
     
     func viewDidLoad() {
-        viewController.setupNavigationBar()
         viewController.setupUI()
         viewController.setupContainerView()
         loadData()
     }
     
+    func viewWillAppear() {
+        viewController.setupNavigationBar()
+    }
+    
     func addListButtonTapped() {
         viewController.presentAddListViewController()
+    }
+    
+    func didSelectRow(at index: Int) {
+        if let list = repository.fetchList(with: index) {
+            viewController.pushToTodoListViewController(with: list)
+        } else {
+            viewController.showError(CoreDataError.fetchingObjectFailed)
+        }
     }
 }
 

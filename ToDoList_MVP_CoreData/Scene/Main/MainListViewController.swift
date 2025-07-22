@@ -26,6 +26,11 @@ class MainListViewController: UIViewController {
         super.viewDidLoad()
         presenter.viewDidLoad()
     }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        presenter.viewWillAppear()
+    }
 }
 
 extension MainListViewController: MainListViewDelegate {
@@ -61,6 +66,11 @@ extension MainListViewController: MainListProtocol {
     func presentAddListViewController() {
         let addListViewController = UINavigationController(rootViewController: AddListViewController(repository: repository))
         present(addListViewController, animated: true)
+    }
+    
+    func pushToTodoListViewController(with list: ListEntity) {
+        let viewController = TodoListViewController(repository: repository, list: list)
+        navigationController?.pushViewController(viewController, animated: true)
     }
     
     func reloadData() {
@@ -137,7 +147,7 @@ extension MainListViewController: UITableViewDataSource, UITableViewDelegate {
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        
+        presenter.didSelectRow(at: indexPath.row)
     }
     
     func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {

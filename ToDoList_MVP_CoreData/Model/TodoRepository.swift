@@ -32,6 +32,16 @@ final class TodoRepository {
         }
     }
     
+    func fetchList(with index: Int) -> ListEntity? {
+        listsFetchRequest.predicate = NSPredicate(format: "orderIndex == %d", index)
+        do {
+            return try context.fetch(listsFetchRequest).first
+        } catch {
+            print("[Repository] Failed to fetch list: \(error.localizedDescription)")
+            return nil
+        }
+    }
+    
     func createList(name: String) async throws {
         let backgroundContext = coreDataManager.newBackgroundContext()
         
