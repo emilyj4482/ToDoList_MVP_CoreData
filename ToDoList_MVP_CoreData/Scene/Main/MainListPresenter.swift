@@ -84,36 +84,44 @@ extension MainListPresenter {
         do {
             try await repository.deleteList(objectID: listEntity.objectID)
         } catch {
-            viewController.showError(error)
+            await MainActor.run {
+                viewController.showError(error)
+            }
         }
     }
 }
 
 extension MainListPresenter: NSFetchedResultsControllerDelegate {
     func controllerWillChangeContent(_ controller: NSFetchedResultsController<any NSFetchRequestResult>) {
-        viewController.tableViewBeginUpdates()
+        Task { @MainActor in
+            viewController.tableViewBeginUpdates()
+        }
     }
     
     func controller(_ controller: NSFetchedResultsController<any NSFetchRequestResult>, didChange anObject: Any, at indexPath: IndexPath?, for type: NSFetchedResultsChangeType, newIndexPath: IndexPath?) {
-        switch type {
-        case .insert:
-            if let newIndexPath = newIndexPath {
-                viewController.tableViewInsertRows(at: [newIndexPath])
+        Task { @MainActor in
+            switch type {
+            case .insert:
+                if let newIndexPath = newIndexPath {
+                    viewController.tableViewInsertRows(at: [newIndexPath])
+                }
+            case .update:
+                if let indexPath = indexPath {
+                    viewController.tableViewReloadRows(at: [indexPath])
+                }
+            case .delete:
+                if let indexPath = indexPath {
+                    viewController.tableViewDeleteRows(at: [indexPath])
+                }
+            default:
+                break
             }
-        case .update:
-            if let indexPath = indexPath {
-                viewController.tableViewReloadRows(at: [indexPath])
-            }
-        case .delete:
-            if let indexPath = indexPath {
-                viewController.tableViewDeleteRows(at: [indexPath])
-            }
-        default:
-            break
         }
     }
     
     func controllerDidChangeContent(_ controller: NSFetchedResultsController<any NSFetchRequestResult>) {
-        viewController.tableViewEndUpdates()
+        Task { @MainActor in
+            viewController.tableViewEndUpdates()
+        }
     }
 }
