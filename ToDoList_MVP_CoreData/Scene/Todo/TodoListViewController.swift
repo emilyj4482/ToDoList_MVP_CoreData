@@ -161,6 +161,16 @@ extension TodoListViewController: UITableViewDataSource, UITableViewDelegate {
         let task = presenter.object(at: indexPath)
         cell.configure(with: task)
         
+        cell.checkButtonTapHandler = { [weak self] isDone in
+            // TODO: udpate entity
+            // self?.presenter.
+        }
+        
+        cell.starButtonTapHandler = { [weak self] isImportant in
+            // TODO: update entity
+            // self?.presenter.
+        }
+        
         return cell
     }
 }
