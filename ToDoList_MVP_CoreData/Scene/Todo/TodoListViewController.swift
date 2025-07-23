@@ -73,6 +73,11 @@ extension TodoListViewController: TodoListProtocol {
         rightBarButtonItem.isHidden = isHidden
     }
     
+    func presentEditTaskViewController() {
+        let viewController = EditTaskViewController(repository: repository)
+        present(viewController, animated: true)
+    }
+    
     func reloadData() {
         containerView.reloadData()
     }

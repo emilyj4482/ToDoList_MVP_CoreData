@@ -11,8 +11,9 @@ import CoreData
 protocol TodoListProtocol {
     func setupNavigationBar()
     func setupUI()
-    func hideButtonsIfNeeded()
     func setupContainerView()
+    func hideButtonsIfNeeded()
+    func presentEditTaskViewController()
     func reloadData()
     func showError(_ error: Error)
     func tableViewBeginUpdates()
@@ -63,7 +64,7 @@ class TodoListPresenter: NSObject {
     }
     
     func addTaskButtonTapped() {
-        
+        viewController.presentEditTaskViewController()
     }
 }
 
