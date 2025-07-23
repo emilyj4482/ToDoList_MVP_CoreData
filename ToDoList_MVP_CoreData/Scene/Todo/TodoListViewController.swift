@@ -13,7 +13,7 @@ class TodoListViewController: UIViewController {
     private let containerView = TodoListView()
     private var repository: TodoRepository
     
-    let list: ListEntity
+    var list: ListEntity
     
     private lazy var rightBarButtonItem = UIBarButtonItem(title: "Edit", style: .plain, target: self, action: #selector(rightBarButtonTapped))
     
@@ -82,6 +82,11 @@ extension TodoListViewController: TodoListProtocol {
         containerView.reloadData()
     }
     
+    func reloadList(from list: ListEntity) {
+        self.list = list
+        navigationItem.title = list.name
+    }
+    
     func showError(_ error: any Error) {
         print("[Error] \(error.localizedDescription)")
         
@@ -94,6 +99,33 @@ extension TodoListViewController: TodoListProtocol {
         let okayButton = UIAlertAction(title: "OK", style: .default)
         
         alert.addAction(okayButton)
+        present(alert, animated: true)
+    }
+    
+    func showTextFieldAlert() {
+        let alert = UIAlertController(
+            title: "Type a new name for the list.",
+            message: "",
+            preferredStyle: .alert
+        )
+        
+        let cancelButton = UIAlertAction(title: "Cancel", style: .cancel)
+        let doneButton = UIAlertAction(title: "Done", style: .default) { [weak self] _ in
+            guard let text = alert.textFields?.first?.text?.trim else { return }
+            if !text.isEmpty {
+                Task {
+                    await self?.presenter.renameList(with: text)
+                    self?.presenter.reloadListEntity()
+                }
+            }
+        }
+        
+        alert.addTextField { [weak self] textField in
+            textField.placeholder = self?.list.name
+        }
+        alert.addAction(cancelButton)
+        alert.addAction(doneButton)
+        
         present(alert, animated: true)
     }
     

@@ -56,7 +56,7 @@ final class MainListPresenter: NSObject {
     }
     
     func didSelectRow(at index: Int) {
-        if let list = repository.fetchList(with: index) {
+        if let list = repository.fetchList(at: index) {
             viewController.pushToTodoListViewController(with: list)
         } else {
             viewController.showError(CoreDataError.fetchingObjectFailed)

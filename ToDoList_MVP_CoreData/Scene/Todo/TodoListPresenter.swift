@@ -15,7 +15,9 @@ protocol TodoListProtocol {
     func hideButtonsIfNeeded()
     func presentEditTaskViewController()
     func reloadData()
+    func reloadList(from list: ListEntity)
     func showError(_ error: Error)
+    func showTextFieldAlert()
     func tableViewBeginUpdates()
     func tableViewEndUpdates()
     func tableViewInsertRows(at indexPaths: [IndexPath])
@@ -27,7 +29,7 @@ class TodoListPresenter: NSObject {
     private let viewController: TodoListProtocol
     private let repository: TodoRepository
     
-    private let list: ListEntity
+    private var list: ListEntity
     
     private lazy var fetchedResultsController: NSFetchedResultsController<TaskEntity> = {
         let controller = NSFetchedResultsController(
@@ -60,7 +62,7 @@ class TodoListPresenter: NSObject {
     }
     
     func rightBarButtonTapped() {
-        
+        viewController.showTextFieldAlert()
     }
     
     func addTaskButtonTapped() {
@@ -86,6 +88,32 @@ extension TodoListPresenter {
     
     func object(at indexPath: IndexPath) -> TaskEntity {
         return fetchedResultsController.object(at: indexPath)
+    }
+    
+    func deleteList(at indexPath: IndexPath) async {
+        let listEntity = fetchedResultsController.object(at: indexPath)
+        do {
+            try await repository.deleteList(objectID: listEntity.objectID)
+        } catch {
+            await MainActor.run {
+                viewController.showError(error)
+            }
+        }
+    }
+    
+    func renameList(with name: String) async {
+        do {
+            try await repository.renameList(objectID: list.objectID, newName: name)
+        } catch {
+            viewController.showError(error)
+        }
+    }
+    
+    func reloadListEntity() {
+        if let fetchedList = repository.fetchList(with: list.objectID) {
+            self.list = fetchedList
+            viewController.reloadList(from: fetchedList)
+        }
     }
 }
 

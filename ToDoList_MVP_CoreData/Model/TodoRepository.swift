@@ -45,7 +45,7 @@ final class TodoRepository {
         }
     }
     
-    func fetchList(with index: Int) -> ListEntity? {
+    func fetchList(at index: Int) -> ListEntity? {
         let fetchRequest: NSFetchRequest<ListEntity> = ListEntity.fetchRequest()
         fetchRequest.sortDescriptors = [NSSortDescriptor(key: "orderIndex", ascending: true)]
         fetchRequest.predicate = NSPredicate(format: "orderIndex == %d", index)
@@ -55,6 +55,14 @@ final class TodoRepository {
             print("[Repository] Failed to fetch list: \(error.localizedDescription)")
             return nil
         }
+    }
+    
+    func fetchList(with id: NSManagedObjectID) -> ListEntity? {
+        let managedObject = try? viewContext.existingObject(with: id)
+        guard let list = managedObject as? ListEntity else {
+            return nil
+        }
+        return list
     }
     
     func createList(name: String) async throws {
