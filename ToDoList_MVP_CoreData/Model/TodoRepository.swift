@@ -22,9 +22,14 @@ final class TodoRepository {
     }
     
     func tasksFetchRequest(for list: ListEntity) -> NSFetchRequest<TaskEntity> {
+        // xcode 버그로 Optional 체크를 해제하였음에도 id가 옵셔널로 정의되어 있음
+        guard let listID = list.id else {
+            fatalError("list.id is nil. tasksFetchRequest Failed")
+        }
+        
         let fetchRequest: NSFetchRequest<TaskEntity> = TaskEntity.fetchRequest()
         fetchRequest.sortDescriptors = [NSSortDescriptor(key: "createdDate", ascending: true)]
-        fetchRequest.predicate = NSPredicate(format: "list == %@", list)
+        fetchRequest.predicate = NSPredicate(format: "listID == %@", listID as CVarArg)
         return fetchRequest
     }
     
@@ -64,6 +69,7 @@ final class TodoRepository {
             let currentCount = try backgroundContext.count(for: fetchRequest)
             
             let list = ListEntity(context: backgroundContext)
+            list.id = UUID()
             list.name = processedName
             list.orderIndex = Int64(currentCount)
             
@@ -132,10 +138,14 @@ final class TodoRepository {
             backgroundContext.delete(list)
             try backgroundContext.save()
         }
+        
+        // MARK: entity를 삭제하면 중간에 orderIndex가 비므로 순서대로 다시 부여해주어야 함
+        try reorderListIndexes()
     }
     
-    // MARK: 아직 사용하지 않음. List 정렬 기능 구현 시 사용
-    func reorderListIndexes(for lists: [ListEntity]) throws {
+    private func reorderListIndexes() throws {
+        let lists = fetchLists()
+        
         for (index, item) in lists.enumerated() {
             item.orderIndex = Int64(index)
         }
@@ -157,6 +167,7 @@ extension TodoRepository {
         
         try await backgroundContext.perform {
             let list = ListEntity(context: backgroundContext)
+            list.id = UUID()
             list.name = "Important"
             list.orderIndex = 0
             
@@ -189,11 +200,12 @@ extension TodoRepository {
         }
     }
     
-    func createTask(title: String) async throws {
+    func createTask(to listID: UUID, title: String) async throws {
         let backgroundContext = coreDataManager.newBackgroundContext()
         
         try await backgroundContext.perform {
             let task = TaskEntity(context: backgroundContext)
+            task.listID = listID
             task.title = title
             task.createdDate = Date()
             task.isDone = false
