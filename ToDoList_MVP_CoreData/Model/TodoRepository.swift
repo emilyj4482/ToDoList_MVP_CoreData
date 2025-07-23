@@ -35,7 +35,6 @@ final class TodoRepository {
     
     // doesn't need async/await because : 1) fetching from viewContext is very quick 2) it's main thread operation
     // doesn't need throws because : 1) fetch errors are genuinely rare 2) UI needs to handle empty state anyway - just returning empty array [] is better scenario
-    // MARK: fetchedResultsController.performFetch()를 사용하기 때문에 호출될 일이 없다. 나중에 다른 경우로 호출이 필요할 경우를 대비해 코드는 살려둠
     func fetchLists() -> [ListEntity] {
         do {
             return try viewContext.fetch(listsFetchRequest)

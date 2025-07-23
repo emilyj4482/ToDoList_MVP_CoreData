@@ -10,6 +10,7 @@ import UIKit
 class EditTaskViewController: UIViewController, EditTaskProtocol {
     
     private lazy var presenter = EditTaskPresenter(viewController: self, repository: repository)
+    private let containerView = EditTaskView()
     private var repository: TodoRepository
     
     init(repository: TodoRepository) {
@@ -27,12 +28,32 @@ class EditTaskViewController: UIViewController, EditTaskProtocol {
     }
     
     func setupUI() {
-        view.backgroundColor = .systemBackground
-        
         sheetPresentationController?.detents = [.custom(resolver: { _ in return 50 })]
+        
+        view.backgroundColor = .systemBackground
+        view.addSubviews([containerView])
+        
+        let safeArea = view.safeAreaLayoutGuide
+        
+        NSLayoutConstraint.activate([
+            containerView.topAnchor.constraint(equalTo: safeArea.topAnchor),
+            containerView.bottomAnchor.constraint(equalTo: safeArea.bottomAnchor),
+            containerView.leadingAnchor.constraint(equalTo: safeArea.leadingAnchor),
+            containerView.trailingAnchor.constraint(equalTo: safeArea.trailingAnchor)
+        ])
     }
     
     func dismiss() {
         dismiss(animated: true)
+    }
+    
+    func setupContainerView() {
+        containerView.inject(delegate: self)
+    }
+}
+
+extension EditTaskViewController: EditTaskViewDelegate {
+    func doneButtonTapped(with text: String) {
+        presenter.doneButtonTapped(with: text)
     }
 }
