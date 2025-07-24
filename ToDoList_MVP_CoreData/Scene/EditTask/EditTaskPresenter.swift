@@ -17,9 +17,12 @@ final class EditTaskPresenter: NSObject {
     private let viewController: EditTaskProtocol
     private let repository: TodoRepository
     
-    init(viewController: EditTaskProtocol, repository: TodoRepository) {
+    private let listID: UUID
+    
+    init(viewController: EditTaskProtocol, repository: TodoRepository, listID: UUID) {
         self.viewController = viewController
         self.repository = repository
+        self.listID = listID
     }
     
     func viewDidLoad() {
@@ -28,6 +31,9 @@ final class EditTaskPresenter: NSObject {
     }
     
     func doneButtonTapped(with text: String) {
+        Task {
+            try await repository.createTask(to: listID, title: text)
+        }
         viewController.dismiss()
     }
 }

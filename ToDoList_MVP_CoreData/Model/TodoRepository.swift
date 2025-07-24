@@ -33,6 +33,23 @@ final class TodoRepository {
         return fetchRequest
     }
     
+    func tasksByDoneFetchRequest(for list: ListEntity) -> NSFetchRequest<TaskEntity> {
+        // xcode 버그로 Optional 체크를 해제하였음에도 id가 옵셔널로 정의되어 있음
+        guard let listID = list.id else {
+            fatalError("list.id is nil. tasksFetchRequest Failed")
+        }
+        
+        // undone first, then done
+        let fetchRequest: NSFetchRequest<TaskEntity> = TaskEntity.fetchRequest()
+        fetchRequest.sortDescriptors = [
+            NSSortDescriptor(key: "isDone", ascending: true),       // undone first, then done
+            NSSortDescriptor(key: "createdDate", ascending: true)   // oldest first within each section
+        
+        ]
+        
+        return fetchRequest
+    }
+    
     // doesn't need async/await because : 1) fetching from viewContext is very quick 2) it's main thread operation
     // doesn't need throws because : 1) fetch errors are genuinely rare 2) UI needs to handle empty state anyway - just returning empty array [] is better scenario
     func fetchLists() -> [ListEntity] {

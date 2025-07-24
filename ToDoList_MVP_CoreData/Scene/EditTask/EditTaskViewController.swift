@@ -9,12 +9,15 @@ import UIKit
 
 class EditTaskViewController: UIViewController, EditTaskProtocol {
     
-    private lazy var presenter = EditTaskPresenter(viewController: self, repository: repository)
+    private lazy var presenter = EditTaskPresenter(viewController: self, repository: repository, listID: listID)
     private let containerView = EditTaskView()
     private var repository: TodoRepository
     
-    init(repository: TodoRepository) {
+    private let listID: UUID
+    
+    init(repository: TodoRepository, listID: UUID) {
         self.repository = repository
+        self.listID = listID
         super.init(nibName: nil, bundle: nil)
     }
     

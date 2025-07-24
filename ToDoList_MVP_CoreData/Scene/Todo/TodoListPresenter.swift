@@ -33,10 +33,10 @@ class TodoListPresenter: NSObject {
     
     private lazy var fetchedResultsController: NSFetchedResultsController<TaskEntity> = {
         let controller = NSFetchedResultsController(
-            fetchRequest: repository.tasksFetchRequest(for: list),
+            fetchRequest: repository.tasksByDoneFetchRequest(for: list),
             managedObjectContext: repository.viewContext,
-            sectionNameKeyPath: nil,
-            cacheName: Keys.fetchedResultsControllerTaskCacheName
+            sectionNameKeyPath: "isDone",   // this creates sections based on isDone property
+            cacheName: nil
         )
         
         controller.delegate = self

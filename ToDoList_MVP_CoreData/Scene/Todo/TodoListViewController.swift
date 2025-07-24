@@ -13,7 +13,7 @@ class TodoListViewController: UIViewController {
     private let containerView = TodoListView()
     private var repository: TodoRepository
     
-    var list: ListEntity
+    private var list: ListEntity
     
     private lazy var rightBarButtonItem = UIBarButtonItem(title: "Edit", style: .plain, target: self, action: #selector(rightBarButtonTapped))
     
