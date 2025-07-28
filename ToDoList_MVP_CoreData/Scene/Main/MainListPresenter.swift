@@ -102,35 +102,29 @@ extension MainListPresenter {
 
 extension MainListPresenter: NSFetchedResultsControllerDelegate {
     func controllerWillChangeContent(_ controller: NSFetchedResultsController<any NSFetchRequestResult>) {
-        Task { @MainActor in
-            viewController.tableViewBeginUpdates()
-        }
+        viewController.tableViewBeginUpdates()
     }
     
     func controller(_ controller: NSFetchedResultsController<any NSFetchRequestResult>, didChange anObject: Any, at indexPath: IndexPath?, for type: NSFetchedResultsChangeType, newIndexPath: IndexPath?) {
-        Task { @MainActor in
-            switch type {
-            case .insert:
-                if let newIndexPath = newIndexPath {
-                    viewController.tableViewInsertRows(at: [newIndexPath])
-                }
-            case .update:
-                if let indexPath = indexPath {
-                    viewController.tableViewReloadRows(at: [indexPath])
-                }
-            case .delete:
-                if let indexPath = indexPath {
-                    viewController.tableViewDeleteRows(at: [indexPath])
-                }
-            default:
-                break
+        switch type {
+        case .insert:
+            if let newIndexPath = newIndexPath {
+                viewController.tableViewInsertRows(at: [newIndexPath])
             }
+        case .update:
+            if let indexPath = indexPath {
+                viewController.tableViewReloadRows(at: [indexPath])
+            }
+        case .delete:
+            if let indexPath = indexPath {
+                viewController.tableViewDeleteRows(at: [indexPath])
+            }
+        default:
+            break
         }
     }
     
     func controllerDidChangeContent(_ controller: NSFetchedResultsController<any NSFetchRequestResult>) {
-        Task { @MainActor in
-            viewController.tableViewEndUpdates()
-        }
+        viewController.tableViewEndUpdates()
     }
 }

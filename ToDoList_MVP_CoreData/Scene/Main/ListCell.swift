@@ -30,7 +30,7 @@ final class ListCell: UITableViewCell {
     private func setupUI() {
         selectionStyle = .none
         
-        addSubviews([
+        contentView.addSubviews([
             listIcon,
             listNameLabel,
             taskCountLabel

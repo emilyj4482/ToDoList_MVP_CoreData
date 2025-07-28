@@ -44,8 +44,8 @@ final class TodoRepository {
         fetchRequest.sortDescriptors = [
             NSSortDescriptor(key: "isDone", ascending: true),       // undone first, then done
             NSSortDescriptor(key: "createdDate", ascending: true)   // oldest first within each section
-        
         ]
+        fetchRequest.predicate = NSPredicate(format: "listID == %@", listID as CVarArg)
         
         return fetchRequest
     }
@@ -79,6 +79,17 @@ final class TodoRepository {
             return nil
         }
         return list
+    }
+    
+    func fetchListWith(uuid: UUID, in context: NSManagedObjectContext) -> ListEntity? {
+        let fetchRequest: NSFetchRequest<ListEntity> = ListEntity.fetchRequest()
+        fetchRequest.predicate = NSPredicate(format: "id == %@", uuid as CVarArg)
+        do {
+            return try viewContext.fetch(fetchRequest).first
+        } catch {
+            print("[Repository] Failed to fetch list: \(error.localizedDescription)")
+            return nil
+        }
     }
     
     func createList(name: String) async throws {
@@ -182,12 +193,12 @@ final class TodoRepository {
 
 extension TodoRepository {
     func createImportantListIfNeeded() async throws {
+        let backgroundContext = coreDataManager.newBackgroundContext()
+        
         // check if Important list already exists
-        if try await getImportantList() != nil {
+        if try await getImportantList(in: backgroundContext) != nil {
             return
         }
-        
-        let backgroundContext = coreDataManager.newBackgroundContext()
         
         try await backgroundContext.perform {
             let list = ListEntity(context: backgroundContext)
@@ -199,16 +210,13 @@ extension TodoRepository {
         }
     }
     
-    private func getImportantList() async throws -> ListEntity? {
+    private func getImportantList(in context: NSManagedObjectContext) async throws -> ListEntity? {
         let fetchRequest: NSFetchRequest<ListEntity> = ListEntity.fetchRequest()
         fetchRequest.predicate = NSPredicate(format: "name == %@", "Important")
         fetchRequest.fetchLimit = 1
         
-        let backgroundContext = coreDataManager.newBackgroundContext()
-        
-        return try await backgroundContext.perform {
-            return try backgroundContext.fetch(fetchRequest).first
-            
+        return try await context.perform {
+            return try context.fetch(fetchRequest).first
         }
     }
 }
@@ -227,13 +235,20 @@ extension TodoRepository {
     func createTask(to listID: UUID, title: String) async throws {
         let backgroundContext = coreDataManager.newBackgroundContext()
         
-        try await backgroundContext.perform {
+        try await backgroundContext.perform { [weak self] in
+            // Fetch the list in the SAME context where creating the task
+            guard let list = self?.fetchListWith(uuid: listID, in: backgroundContext) else {
+                throw CoreDataError.fetchingObjectFailed
+            }
+            
             let task = TaskEntity(context: backgroundContext)
             task.listID = listID
             task.title = title
             task.createdDate = Date()
             task.isDone = false
             task.isImportant = false
+            
+            task.addToList(list)
             
             try backgroundContext.save()
         }
@@ -257,6 +272,12 @@ extension TodoRepository {
     func toggleTaskImportant(objectID: NSManagedObjectID, isImportant: Bool) async throws {
         let backgroundContext = coreDataManager.newBackgroundContext()
         
+        // 1. important list fetch
+        guard let importantList = try await getImportantList(in: backgroundContext) else {
+            throw CoreDataError.fetchingObjectFailed
+        }
+        
+        // 2. fetch task
         try await backgroundContext.perform {
             let managedObject = try backgroundContext.existingObject(with: objectID)
             
@@ -264,7 +285,15 @@ extension TodoRepository {
                 throw CoreDataError.castingObjectFailed
             }
             
+            // 3. toggle important
             task.isImportant = isImportant
+            // 4. add to/remove from important list
+            if isImportant {
+                importantList.addToTasks(task)
+            } else {
+                importantList.removeFromTasks(task)
+            }
+            
             try backgroundContext.save()
         }
     }

@@ -15,11 +15,13 @@ class TodoListView: UIView {
     
     weak var delegate: TodoListViewDelegate?
     
-    private let tableView: UITableView = {
+    let tableView: UITableView = {
         let tableView = UITableView(frame: .zero)
         
         tableView.rowHeight = 50
         tableView.separatorStyle = .singleLine
+        tableView.contentInsetAdjustmentBehavior = .never   // prevent scrolling down as soon as vc pushed
+        tableView.sectionHeaderHeight = 0                   // set default for unwanted headers
         tableView.register(TaskCell.self, forCellReuseIdentifier: TaskCell.identifier)
         tableView.register(TaskDoneHeader.self, forHeaderFooterViewReuseIdentifier: TaskDoneHeader.identifier)
         
@@ -95,15 +97,23 @@ class TodoListView: UIView {
     }
     
     func tableViewInsertRows(at indexPaths: [IndexPath]) {
-        tableView.insertRows(at: indexPaths, with: .automatic)
+        tableView.insertRows(at: indexPaths, with: .fade)
     }
     
     func tableViewReloadRows(at indexPaths: [IndexPath]) {
-        tableView.reloadRows(at: indexPaths, with: .automatic)
+        tableView.reloadRows(at: indexPaths, with: .none)
     }
     
     func tableViewDeleteRows(at indexPaths: [IndexPath]) {
-        tableView.deleteRows(at: indexPaths, with: .automatic)
+        tableView.deleteRows(at: indexPaths, with: .fade)
+    }
+    
+    func tableViewInsertSections(_ sections: IndexSet) {
+        tableView.insertSections(sections, with: .fade)
+    }
+    
+    func tableViewDeleteSections(_ sections: IndexSet) {
+        tableView.deleteSections(sections, with: .fade)
     }
     
     @objc private func addTaskButtonTapped() {

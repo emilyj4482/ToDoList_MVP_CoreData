@@ -37,44 +37,54 @@ class TaskCell: UITableViewCell {
     
     var starButtonTapHandler: ((Bool) -> Void)?
     
+    override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
+        super.init(style: style, reuseIdentifier: reuseIdentifier)
+        setupUI()
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
+    override func prepareForReuse() {
+        super.prepareForReuse()
+        checkButtonTapHandler = nil
+        starButtonTapHandler = nil
+    }
+    
     private func setupUI() {
         selectionStyle = .none
         
-        addSubviews([
+        contentView.addSubviews([
             checkButton,
             taskTitleLabel,
             starButton
         ])
         
-        let offset: CGFloat = 16.0
-        
         NSLayoutConstraint.activate([
             checkButton.centerYAnchor.constraint(equalTo: centerYAnchor),
-            checkButton.leadingAnchor.constraint(equalTo: leadingAnchor, constant: offset),
+            checkButton.leadingAnchor.constraint(equalTo: leadingAnchor),
             
             taskTitleLabel.centerYAnchor.constraint(equalTo: centerYAnchor),
             taskTitleLabel.leadingAnchor.constraint(equalTo: checkButton.trailingAnchor, constant: 10.0),
             
             starButton.centerYAnchor.constraint(equalTo: centerYAnchor),
-            starButton.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -offset)
+            starButton.trailingAnchor.constraint(equalTo: trailingAnchor)
         ])
     }
     
     func configure(with task: TaskEntity) {
-        setupUI()
-        
         taskTitleLabel.text = task.title
         checkButton.isSelected = task.isDone
-        checkButton.tintColor = checkButton.isSelected ? .green : .red
+        checkButton.tintColor = task.isDone ? .green : .red
         starButton.isSelected = task.isImportant
-        
         strikeThroughText(if: task.isDone)
     }
     
     private func strikeThroughText(if isDone: Bool) {
         guard let text = taskTitleLabel.text else { return }
         
-        let attributes: [NSAttributedString.Key: Any] = isDone ? [.strikethroughStyle: NSUnderlineStyle.single.rawValue] : [:]
+        let attributes: [NSAttributedString.Key: Any] = isDone ? [.strikethroughStyle: NSUnderlineStyle.single.rawValue] : [.strikethroughStyle: NSUnderlineStyle()]
         
         taskTitleLabel.attributedText = NSAttributedString(string: text, attributes: attributes)
         taskTitleLabel.alpha = isDone ? 0.5 : 1.0

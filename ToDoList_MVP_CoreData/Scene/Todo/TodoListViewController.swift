@@ -74,8 +74,10 @@ extension TodoListViewController: TodoListProtocol {
     }
     
     func presentEditTaskViewController() {
-        let viewController = EditTaskViewController(repository: repository)
-        present(viewController, animated: true)
+        if let listID = list.id {
+            let viewController = EditTaskViewController(repository: repository, listID: listID)
+            present(viewController, animated: true)
+        }
     }
     
     func reloadData() {
@@ -148,11 +150,19 @@ extension TodoListViewController: TodoListProtocol {
     func tableViewDeleteRows(at indexPaths: [IndexPath]) {
         containerView.tableViewDeleteRows(at: indexPaths)
     }
+    
+    func tableViewInsertSections(_ sections: IndexSet) {
+        containerView.tableViewInsertSections(sections)
+    }
+    
+    func tableViewDeleteSections(_ sections: IndexSet) {
+        containerView.tableViewDeleteSections(sections)
+    }
 }
 
 extension TodoListViewController: UITableViewDataSource, UITableViewDelegate {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        presenter.numberOfRows()
+        presenter.numberOfRows(in: section)
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
@@ -162,15 +172,47 @@ extension TodoListViewController: UITableViewDataSource, UITableViewDelegate {
         cell.configure(with: task)
         
         cell.checkButtonTapHandler = { [weak self] isDone in
-            // TODO: udpate entity
-            // self?.presenter.
+            print(isDone)
+            Task {
+                try await self?.presenter.toggleTaskDone(isDone, taskID: task.objectID)
+            }
         }
         
         cell.starButtonTapHandler = { [weak self] isImportant in
-            // TODO: update entity
-            // self?.presenter.
+            print(isImportant)
+            Task {
+                try await self?.presenter.toggleTaskImportant(isImportant, taskID: task.objectID)
+            }
         }
         
         return cell
+    }
+    
+    func numberOfSections(in tableView: UITableView) -> Int {
+        presenter.numberOfSections()
+    }
+    
+    func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
+        guard
+            let sections = presenter.sectionsInfo(),
+            section < sections.count
+        else { return 0 }
+        
+        let section = sections[section]
+        let isDoneSection = section.name == "1"
+        
+        return isDoneSection ? 20 : 0
+    }
+    
+    func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
+        guard
+            let header = tableView.dequeueReusableHeaderFooterView(withIdentifier: TaskDoneHeader.identifier) as? TaskDoneHeader,
+            let sections = presenter.sectionsInfo()
+        else { return nil }
+        
+        let section = sections[section]
+        
+        header.configure(with: section)
+        return header
     }
 }
