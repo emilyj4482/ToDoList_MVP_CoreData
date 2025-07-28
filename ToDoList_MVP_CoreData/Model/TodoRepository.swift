@@ -22,7 +22,7 @@ final class TodoRepository {
     }
     
     func tasksFetchRequest(for list: ListEntity) -> NSFetchRequest<TaskEntity> {
-        // xcode 버그로 Optional 체크를 해제하였음에도 id가 옵셔널로 정의되어 있음
+        // xcode 버그로 Optional 체크를 해제하였음에도 id가 옵셔널로 정의되어 있어 옵셔널 바인딩 필요
         guard let listID = list.id else {
             fatalError("list.id is nil. tasksFetchRequest Failed")
         }
@@ -34,9 +34,9 @@ final class TodoRepository {
     }
     
     func tasksByDoneFetchRequest(for list: ListEntity) -> NSFetchRequest<TaskEntity> {
-        // xcode 버그로 Optional 체크를 해제하였음에도 id가 옵셔널로 정의되어 있음
+        // xcode 버그로 Optional 체크를 해제하였음에도 id가 옵셔널로 정의되어 있어 옵셔널 바인딩 필요
         guard let listID = list.id else {
-            fatalError("list.id is nil. tasksFetchRequest Failed")
+            fatalError("list.id is nil. tasksByDoneFetchRequest Failed")
         }
         
         // undone first, then done
@@ -46,6 +46,17 @@ final class TodoRepository {
             NSSortDescriptor(key: "createdDate", ascending: true)   // oldest first within each section
         ]
         fetchRequest.predicate = NSPredicate(format: "listID == %@", listID as CVarArg)
+        
+        return fetchRequest
+    }
+    
+    func tasksFromImportantFetchRequest() -> NSFetchRequest<TaskEntity> {
+        let fetchRequest: NSFetchRequest<TaskEntity> = TaskEntity.fetchRequest()
+        fetchRequest.sortDescriptors = [
+            NSSortDescriptor(key: "isDone", ascending: true),
+            NSSortDescriptor(key: "createdDate", ascending: true)
+        ]
+        fetchRequest.predicate = NSPredicate(format: "isImportant == true")
         
         return fetchRequest
     }
@@ -223,6 +234,7 @@ extension TodoRepository {
 
 /// TaskEntity CRUD
 extension TodoRepository {
+    // MARK: list에 속한 모든 task를 fetch - 기본적으로 구현은 했으나 현재 사용처가 없음
     func fetchTasks(for list: ListEntity) -> [TaskEntity] {
         do {
             return try viewContext.fetch(tasksFetchRequest(for: list))

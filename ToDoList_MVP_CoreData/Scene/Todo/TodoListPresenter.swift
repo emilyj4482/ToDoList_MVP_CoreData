@@ -35,7 +35,7 @@ class TodoListPresenter: NSObject {
     
     private lazy var fetchedResultsController: NSFetchedResultsController<TaskEntity> = {
         let controller = NSFetchedResultsController(
-            fetchRequest: repository.tasksByDoneFetchRequest(for: list),
+            fetchRequest: list.name == "Important" ? repository.tasksFromImportantFetchRequest() : repository.tasksByDoneFetchRequest(for: list),
             managedObjectContext: repository.viewContext,
             sectionNameKeyPath: "isDone",   // this creates sections based on isDone property
             cacheName: nil
