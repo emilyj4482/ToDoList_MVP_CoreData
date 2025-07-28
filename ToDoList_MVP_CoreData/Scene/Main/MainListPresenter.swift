@@ -14,6 +14,7 @@ protocol MainListProtocol {
     func setupContainerView()
     func presentAddListViewController()
     func pushToTodoListViewController(with list: ListEntity)
+    func configure(with numberOfRows: Int)
     func reloadData()
     func showError(_ error: Error)
     func showActionSheet(indexPath: IndexPath)
@@ -126,5 +127,6 @@ extension MainListPresenter: NSFetchedResultsControllerDelegate {
     
     func controllerDidChangeContent(_ controller: NSFetchedResultsController<any NSFetchRequestResult>) {
         viewController.tableViewEndUpdates()
+        viewController.configure(with: numberOfRows())
     }
 }

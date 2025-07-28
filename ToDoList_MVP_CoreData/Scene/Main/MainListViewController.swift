@@ -69,6 +69,10 @@ extension MainListViewController: MainListProtocol {
         navigationController?.pushViewController(viewController, animated: true)
     }
     
+    func configure(with numberOfRows: Int) {
+        containerView.configure(with: numberOfRows)
+    }
+    
     func reloadData() {
         containerView.reloadData()
     }

@@ -91,6 +91,19 @@ class MainListView: UIView {
         ])
     }
     
+    func configure(with numberOfRows: Int) {
+        let count = numberOfRows - 1
+        var text: String
+        
+        if count <= 1 {
+            text = "You have \(count) custom list."
+        } else {
+            text = "You have \(count) custom lists."
+        }
+        
+        countLabel.text = text
+    }
+    
     func reloadData() {
         tableView.reloadData()
     }

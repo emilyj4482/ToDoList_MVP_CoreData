@@ -36,8 +36,10 @@ final class AddListPresenter: NSObject {
         } else {
             Task {
                 try await repository.createList(name: input)
+                await MainActor.run {
+                    viewController.dismiss()
+                }
             }
-            viewController.dismiss()
         }
     }
 }

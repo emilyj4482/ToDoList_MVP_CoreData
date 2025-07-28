@@ -171,6 +171,7 @@ final class TodoRepository {
         }
     }
     
+    // TODO: Important task가 있을 경우 task 개별 삭제 필요
     func deleteList(objectID: NSManagedObjectID) async throws {
         let backgroundContext = coreDataManager.newBackgroundContext()
         
