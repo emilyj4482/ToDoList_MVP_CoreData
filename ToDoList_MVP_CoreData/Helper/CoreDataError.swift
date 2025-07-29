@@ -10,4 +10,5 @@ import Foundation
 enum CoreDataError: Error {
     case castingObjectFailed
     case fetchingObjectFailed
+    case etc
 }

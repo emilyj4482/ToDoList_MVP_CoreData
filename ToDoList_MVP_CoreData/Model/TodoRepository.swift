@@ -171,15 +171,25 @@ final class TodoRepository {
         }
     }
     
-    // TODO: Important task가 있을 경우 task 개별 삭제 필요
     func deleteList(objectID: NSManagedObjectID) async throws {
         let backgroundContext = coreDataManager.newBackgroundContext()
         
-        try await backgroundContext.perform {
+        try await backgroundContext.perform { [weak self] in
             let managedObject = try backgroundContext.existingObject(with: objectID)
             
             guard let list = managedObject as? ListEntity else {
                 throw CoreDataError.castingObjectFailed
+            }
+            
+            guard let request = self?.tasksFetchRequest(for: list) else {
+                throw CoreDataError.etc
+            }
+            
+            let tasks = try backgroundContext.fetch(request)
+            
+            // important tasks remove
+            tasks.filter { $0.isImportant }.forEach {
+                backgroundContext.delete($0)
             }
             
             backgroundContext.delete(list)
