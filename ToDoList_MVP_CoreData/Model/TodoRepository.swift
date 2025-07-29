@@ -193,22 +193,19 @@ final class TodoRepository {
             }
             
             backgroundContext.delete(list)
+            
+            // MARK: entity를 삭제하면 중간에 orderIndex가 비므로 순서대로 다시 부여해주어야 함
+            try self?.reorderListIndexes(in: backgroundContext)
+            
             try backgroundContext.save()
         }
-        
-        // MARK: entity를 삭제하면 중간에 orderIndex가 비므로 순서대로 다시 부여해주어야 함
-        try reorderListIndexes()
     }
     
-    private func reorderListIndexes() throws {
-        let lists = fetchLists()
+    private func reorderListIndexes(in context: NSManagedObjectContext) throws {
+        let lists = try context.fetch(listsFetchRequest)
         
         for (index, item) in lists.enumerated() {
             item.orderIndex = Int64(index)
-        }
-        
-        if viewContext.hasChanges {
-            try viewContext.save()
         }
     }
 }
