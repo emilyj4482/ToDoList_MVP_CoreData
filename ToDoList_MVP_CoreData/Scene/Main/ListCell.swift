@@ -27,6 +27,15 @@ final class ListCell: UITableViewCell {
         return label
     }()
     
+    override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
+        super.init(style: style, reuseIdentifier: reuseIdentifier)
+        setupUI()
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
     private func setupUI() {
         selectionStyle = .none
         
@@ -51,8 +60,6 @@ final class ListCell: UITableViewCell {
     }
     
     func configure(with list: ListEntity) {
-        setupUI()
-
         // Important list의 경우 icon을 star로 지정
         if list.orderIndex == 0 {
             listIcon.image = UIImage(systemName: "star.fill")
