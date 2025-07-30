@@ -90,8 +90,8 @@ extension MainListPresenter {
     }
     
     func deleteList(at indexPath: IndexPath) async {
-        let listEntity = fetchedResultsController.object(at: indexPath)
         do {
+            let listEntity = fetchedResultsController.object(at: indexPath)
             try await repository.deleteList(objectID: listEntity.objectID)
         } catch {
             await MainActor.run {

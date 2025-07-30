@@ -18,6 +18,7 @@ protocol TodoListProtocol {
     func reloadList(from list: ListEntity)
     func showError(_ error: Error)
     func showTextFieldAlert()
+    func showActionSheet(indexPath: IndexPath)
     func tableViewBeginUpdates()
     func tableViewEndUpdates()
     func tableViewInsertRows(at indexPaths: [IndexPath])
@@ -121,6 +122,19 @@ extension TodoListPresenter {
     
     func toggleTaskImportant(_ isImportant: Bool, taskID: NSManagedObjectID) async throws {
         try await repository.toggleTaskImportant(objectID: taskID, isImportant: isImportant)
+    }
+    
+    func showActionSheet(indexPath: IndexPath) {
+        viewController.showActionSheet(indexPath: indexPath)
+    }
+    
+    func deleteTask(at indexPath: IndexPath) async {
+        do {
+            let taskToDelete = fetchedResultsController.object(at: indexPath)
+            try await repository.deleteTask(objectID: taskToDelete.objectID)
+        } catch {
+            viewController.showError(error)
+        }
     }
 }
 

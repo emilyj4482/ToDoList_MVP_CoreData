@@ -131,6 +131,26 @@ extension TodoListViewController: TodoListProtocol {
         present(alert, animated: true)
     }
     
+    func showActionSheet(indexPath: IndexPath) {
+        let actionSheet = UIAlertController(
+            title: "Delete Task",
+            message: "Are you sure you want to delete this task?",
+            preferredStyle: .actionSheet
+        )
+        
+        let yesButton = UIAlertAction(title: "Yes", style: .default) { [weak self] _ in
+            Task {
+                await self?.presenter.deleteTask(at: indexPath)
+            }
+        }
+        
+        let cancelButton = UIAlertAction(title: "Cancel", style: .cancel)
+        
+        actionSheet.addAction(yesButton)
+        actionSheet.addAction(cancelButton)
+        present(actionSheet, animated: true)
+    }
+    
     func tableViewBeginUpdates() {
         containerView.tableViewBeginUpdates()
     }
@@ -214,5 +234,26 @@ extension TodoListViewController: UITableViewDataSource, UITableViewDelegate {
         
         header.configure(with: section)
         return header
+    }
+    
+    func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
+        let deleteAction = UIContextualAction(style: .destructive, title: "") { [weak self] (action, view, completionHandler) in
+            
+            self?.presenter.showActionSheet(indexPath: indexPath)
+            
+            completionHandler(true)
+        }
+        
+        let editAction = UIContextualAction(style: .normal, title: "") { [weak self] (action, view, completionHandler) in
+            
+            completionHandler(true)
+        }
+        
+        deleteAction.image = UIImage(systemName: "trash")
+        editAction.image = UIImage(systemName: "pencil")
+        
+        let swipe = UISwipeActionsConfiguration(actions: [deleteAction, editAction])
+        
+        return swipe
     }
 }
