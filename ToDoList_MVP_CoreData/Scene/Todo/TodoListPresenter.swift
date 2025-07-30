@@ -13,7 +13,7 @@ protocol TodoListProtocol {
     func setupUI()
     func setupContainerView()
     func hideButtonsIfNeeded()
-    func presentEditTaskViewController()
+    func presentEditTaskViewController(with mode: EditTaskMode)
     func reloadData()
     func reloadList(from list: ListEntity)
     func showError(_ error: Error)
@@ -69,7 +69,14 @@ class TodoListPresenter: NSObject {
     }
     
     func addTaskButtonTapped() {
-        viewController.presentEditTaskViewController()
+        if let listID = list.id {
+            viewController.presentEditTaskViewController(with: .create(listID: listID))
+        }
+    }
+    
+    func editSwipeActionTapped(indexPath: IndexPath) {
+        let task = fetchedResultsController.object(at: indexPath)
+        viewController.presentEditTaskViewController(with: .retitle(task: task))
     }
 }
 
@@ -133,7 +140,9 @@ extension TodoListPresenter {
             let taskToDelete = fetchedResultsController.object(at: indexPath)
             try await repository.deleteTask(objectID: taskToDelete.objectID)
         } catch {
-            viewController.showError(error)
+            await MainActor.run {
+                viewController.showError(error)
+            }
         }
     }
 }

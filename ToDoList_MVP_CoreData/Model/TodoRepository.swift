@@ -332,4 +332,19 @@ extension TodoRepository {
             try backgroundContext.save()
         }
     }
+    
+    func retitleTask(objectID: NSManagedObjectID, newTitle: String) async throws {
+        let backgroundContext = coreDataManager.newBackgroundContext()
+        
+        try await backgroundContext.perform {
+            let managedObject = try backgroundContext.existingObject(with: objectID)
+            
+            guard let task = managedObject as? TaskEntity else {
+                throw CoreDataError.castingObjectFailed
+            }
+            
+            task.title = newTitle
+            try backgroundContext.save()
+        }
+    }
 }

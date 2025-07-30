@@ -36,7 +36,6 @@ class EditTaskView: UIView {
     override init(frame: CGRect) {
         super.init(frame: frame)
         setupUI()
-        configure()
     }
     
     required init?(coder: NSCoder) {
@@ -73,9 +72,16 @@ class EditTaskView: UIView {
         ])
     }
     
-    func configure() {
-        checkImage.image = UIImage(systemName: "circle")
-        checkImage.tintColor = .red
+    func configure(mode: EditTaskMode) {
+        switch mode {
+        case .create:
+            checkImage.image = UIImage(systemName: "circle")
+            checkImage.tintColor = .red
+        case .retitle(let task):
+            checkImage.image = UIImage(systemName: task.isDone ? "checkmark.circle" : "circle")
+            checkImage.tintColor = task.isDone ? .green : .red
+            textField.text = task.title
+        }
     }
     
     @objc private func doneButtonTapped() {

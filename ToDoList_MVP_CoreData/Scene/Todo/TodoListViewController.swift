@@ -73,11 +73,16 @@ extension TodoListViewController: TodoListProtocol {
         rightBarButtonItem.isHidden = isHidden
     }
     
-    func presentEditTaskViewController() {
-        if let listID = list.id {
-            let viewController = EditTaskViewController(repository: repository, listID: listID)
-            present(viewController, animated: true)
+    func presentEditTaskViewController(with mode: EditTaskMode) {
+        var viewController: UIViewController
+        
+        switch mode {
+        case .create(let listID):
+            viewController = EditTaskViewController(repository: repository, mode: .create(listID: listID))
+        case .retitle(let task):
+            viewController = EditTaskViewController(repository: repository, mode: .retitle(task: task))
         }
+        present(viewController, animated: true)
     }
     
     func reloadData() {
@@ -89,7 +94,7 @@ extension TodoListViewController: TodoListProtocol {
         navigationItem.title = list.name
     }
     
-    func showError(_ error: any Error) {
+    func showError(_ error: Error) {
         print("[Error] \(error.localizedDescription)")
         
         let alert = UIAlertController(
@@ -245,6 +250,8 @@ extension TodoListViewController: UITableViewDataSource, UITableViewDelegate {
         }
         
         let editAction = UIContextualAction(style: .normal, title: "") { [weak self] (action, view, completionHandler) in
+            
+            self?.presenter.editSwipeActionTapped(indexPath: indexPath)
             
             completionHandler(true)
         }

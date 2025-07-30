@@ -10,30 +10,44 @@ import Foundation
 protocol EditTaskProtocol {
     func setupUI()
     func dismiss()
-    func setupContainerView()
+    func setupContainerView(mode: EditTaskMode)
+    func showError(_ error: Error)
 }
 
 final class EditTaskPresenter: NSObject {
     private let viewController: EditTaskProtocol
     private let repository: TodoRepository
     
-    private let listID: UUID
+    private let mode: EditTaskMode
     
-    init(viewController: EditTaskProtocol, repository: TodoRepository, listID: UUID) {
+    init(viewController: EditTaskProtocol, repository: TodoRepository, mode: EditTaskMode) {
         self.viewController = viewController
         self.repository = repository
-        self.listID = listID
+        self.mode = mode
     }
     
     func viewDidLoad() {
         viewController.setupUI()
-        viewController.setupContainerView()
+        viewController.setupContainerView(mode: mode)
     }
     
     func doneButtonTapped(with text: String) {
         Task {
-            try await repository.createTask(to: listID, title: text)
+            do {
+                switch mode {
+                case .create(let listID):
+                    try await repository.createTask(to: listID, title: text)
+                case .retitle(let task):
+                    try await repository.retitleTask(objectID: task.objectID, newTitle: text)
+                }
+                await MainActor.run {
+                    viewController.dismiss()
+                }
+            } catch {
+                await MainActor.run {
+                    viewController.showError(error)
+                }
+            }
         }
-        viewController.dismiss()
     }
 }

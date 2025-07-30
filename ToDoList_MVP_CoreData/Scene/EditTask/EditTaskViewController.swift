@@ -9,15 +9,15 @@ import UIKit
 
 class EditTaskViewController: UIViewController, EditTaskProtocol {
     
-    private lazy var presenter = EditTaskPresenter(viewController: self, repository: repository, listID: listID)
+    private lazy var presenter = EditTaskPresenter(viewController: self, repository: repository, mode: mode)
     private let containerView = EditTaskView()
     private var repository: TodoRepository
     
-    private let listID: UUID
+    private let mode: EditTaskMode
     
-    init(repository: TodoRepository, listID: UUID) {
+    init(repository: TodoRepository, mode: EditTaskMode) {
         self.repository = repository
-        self.listID = listID
+        self.mode = mode
         super.init(nibName: nil, bundle: nil)
     }
     
@@ -50,8 +50,24 @@ class EditTaskViewController: UIViewController, EditTaskProtocol {
         dismiss(animated: true)
     }
     
-    func setupContainerView() {
+    func setupContainerView(mode: EditTaskMode) {
         containerView.inject(delegate: self)
+        containerView.configure(mode: mode)
+    }
+    
+    func showError(_ error: Error) {
+        print("[Error] \(error.localizedDescription)")
+        
+        let alert = UIAlertController(
+            title: "Error",
+            message: "Operation could not be completed. Please try again later.",
+            preferredStyle: .alert
+        )
+        
+        let okayButton = UIAlertAction(title: "OK", style: .default)
+        
+        alert.addAction(okayButton)
+        present(alert, animated: true)
     }
 }
 
