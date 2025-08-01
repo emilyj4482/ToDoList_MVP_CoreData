@@ -85,6 +85,14 @@ extension MainListPresenter {
         return fetchedResultsController.object(at: indexPath)
     }
     
+    func taskCount(for list: ListEntity) -> Int {
+        return repository.countTasks(for: list)
+    }
+    
+    func importantTaskCount() -> Int {
+        return repository.countImportantTasks()
+    }
+    
     func showActionSheet(indexPath: IndexPath) {
         viewController.showActionSheet(indexPath: indexPath)
     }

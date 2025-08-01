@@ -141,7 +141,9 @@ extension MainListViewController: UITableViewDataSource, UITableViewDelegate {
         guard let cell = tableView.dequeueReusableCell(withIdentifier: ListCell.identifier, for: indexPath) as? ListCell else { return UITableViewCell() }
         
         let list = presenter.object(at: indexPath)
-        cell.configure(with: list)
+        let taskCount = indexPath.row == 0 ? presenter.importantTaskCount() : presenter.taskCount(for: list)
+        
+        cell.configure(with: list, taskCount: taskCount)
         
         return cell
     }

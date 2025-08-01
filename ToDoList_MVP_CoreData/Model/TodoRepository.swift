@@ -242,13 +242,21 @@ extension TodoRepository {
 
 /// TaskEntity CRUD
 extension TodoRepository {
-    // MARK: list에 속한 모든 task를 fetch - 기본적으로 구현은 했으나 현재 사용처가 없음
-    func fetchTasks(for list: ListEntity) -> [TaskEntity] {
+    func countTasks(for list: ListEntity) -> Int {
         do {
-            return try viewContext.fetch(tasksFetchRequest(for: list))
+            return try viewContext.count(for: tasksFetchRequest(for: list))
         } catch {
             print("[Repository] Failed to fetch tasks: \(error.localizedDescription)")
-            return []
+            return 0
+        }
+    }
+    
+    func countImportantTasks() -> Int {
+        do {
+            return try viewContext.count(for: tasksFromImportantFetchRequest())
+        } catch {
+            print("[Repository] Failed to fetch important tasks: \(error.localizedDescription)")
+            return 0
         }
     }
     
@@ -268,7 +276,7 @@ extension TodoRepository {
             task.isDone = false
             task.isImportant = false
             
-            task.addToList(list)
+            list.addToTasks(task)
             
             try backgroundContext.save()
         }
@@ -321,12 +329,23 @@ extension TodoRepository {
     func deleteTask(objectID: NSManagedObjectID) async throws {
         let backgroundContext = coreDataManager.newBackgroundContext()
         
-        try await backgroundContext.perform {
+        try await backgroundContext.perform { [weak self] in
             let managedObject = try backgroundContext.existingObject(with: objectID)
             
             guard let task = managedObject as? TaskEntity else {
                 throw CoreDataError.castingObjectFailed
             }
+            
+            // list에서도 remove를 먼저 해줘야 NSFetchedResultsController 트리거 - MainListView reload 됨
+            guard let listID = task.listID else {
+                throw CoreDataError.etc
+            }
+            
+            guard let list = self?.fetchListWith(uuid: listID, in: backgroundContext) else {
+                throw CoreDataError.fetchingObjectFailed
+            }
+            
+            list.removeFromTasks(task)
             
             backgroundContext.delete(task)
             try backgroundContext.save()

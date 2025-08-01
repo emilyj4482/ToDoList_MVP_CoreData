@@ -197,14 +197,12 @@ extension TodoListViewController: UITableViewDataSource, UITableViewDelegate {
         cell.configure(with: task)
         
         cell.checkButtonTapHandler = { [weak self] isDone in
-            print(isDone)
             Task {
                 try await self?.presenter.toggleTaskDone(isDone, taskID: task.objectID)
             }
         }
         
         cell.starButtonTapHandler = { [weak self] isImportant in
-            print(isImportant)
             Task {
                 try await self?.presenter.toggleTaskImportant(isImportant, taskID: task.objectID)
             }

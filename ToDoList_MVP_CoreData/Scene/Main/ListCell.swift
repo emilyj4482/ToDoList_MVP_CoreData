@@ -59,7 +59,7 @@ final class ListCell: UITableViewCell {
         ])
     }
     
-    func configure(with list: ListEntity) {
+    func configure(with list: ListEntity, taskCount: Int) {
         // Important list의 경우 icon을 star로 지정
         if list.orderIndex == 0 {
             listIcon.image = UIImage(systemName: "star.fill")
@@ -68,6 +68,6 @@ final class ListCell: UITableViewCell {
         }
         
         listNameLabel.text = list.name
-        taskCountLabel.text = "\(list.tasks?.count ?? 0)"
+        taskCountLabel.text = "\(taskCount)"
     }
 }
