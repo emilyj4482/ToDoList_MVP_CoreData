@@ -8,7 +8,7 @@
 import Foundation
 import CoreData
 
-protocol MainListProtocol {
+protocol MainListProtocol: AnyObject {
     func setupNavigationBar()
     func setupUI()
     func setupContainerView()
@@ -26,7 +26,7 @@ protocol MainListProtocol {
 }
 
 final class MainListPresenter: NSObject {
-    private let viewController: MainListProtocol
+    private weak var viewController: MainListProtocol?
     private let repository: TodoRepository
     private lazy var fetchedResultsController: NSFetchedResultsController<ListEntity> = {
         let controller = NSFetchedResultsController(
@@ -46,21 +46,21 @@ final class MainListPresenter: NSObject {
     }
     
     func viewDidLoad() {
-        viewController.setupUI()
-        viewController.setupNavigationBar()
-        viewController.setupContainerView()
+        viewController?.setupUI()
+        viewController?.setupNavigationBar()
+        viewController?.setupContainerView()
         loadLists()
     }
     
     func addListButtonTapped() {
-        viewController.presentAddListViewController()
+        viewController?.presentAddListViewController()
     }
     
     func didSelectRow(at index: Int) {
         if let list = repository.fetchList(at: index) {
-            viewController.pushToTodoListViewController(with: list)
+            viewController?.pushToTodoListViewController(with: list)
         } else {
-            viewController.showError(CoreDataError.fetchingObjectFailed)
+            viewController?.showError(CoreDataError.fetchingObjectFailed)
         }
     }
 }
@@ -69,9 +69,9 @@ extension MainListPresenter {
     func loadLists() {
         do {
             try fetchedResultsController.performFetch()
-            viewController.reloadData()
+            viewController?.reloadData()
         } catch {
-            viewController.showError(error)
+            viewController?.showError(error)
         }
     }
     
@@ -94,7 +94,7 @@ extension MainListPresenter {
     }
     
     func showActionSheet(indexPath: IndexPath) {
-        viewController.showActionSheet(indexPath: indexPath)
+        viewController?.showActionSheet(indexPath: indexPath)
     }
     
     func deleteList(at indexPath: IndexPath) async {
@@ -103,7 +103,7 @@ extension MainListPresenter {
             try await repository.deleteList(objectID: listEntity.objectID)
         } catch {
             await MainActor.run {
-                viewController.showError(error)
+                viewController?.showError(error)
             }
         }
     }
@@ -111,22 +111,22 @@ extension MainListPresenter {
 
 extension MainListPresenter: NSFetchedResultsControllerDelegate {
     func controllerWillChangeContent(_ controller: NSFetchedResultsController<any NSFetchRequestResult>) {
-        viewController.tableViewBeginUpdates()
+        viewController?.tableViewBeginUpdates()
     }
     
     func controller(_ controller: NSFetchedResultsController<any NSFetchRequestResult>, didChange anObject: Any, at indexPath: IndexPath?, for type: NSFetchedResultsChangeType, newIndexPath: IndexPath?) {
         switch type {
         case .insert:
             if let newIndexPath = newIndexPath {
-                viewController.tableViewInsertRows(at: [newIndexPath])
+                viewController?.tableViewInsertRows(at: [newIndexPath])
             }
         case .update:
             if let indexPath = indexPath {
-                viewController.tableViewReloadRows(at: [indexPath])
+                viewController?.tableViewReloadRows(at: [indexPath])
             }
         case .delete:
             if let indexPath = indexPath {
-                viewController.tableViewDeleteRows(at: [indexPath])
+                viewController?.tableViewDeleteRows(at: [indexPath])
             }
         default:
             break
@@ -134,7 +134,7 @@ extension MainListPresenter: NSFetchedResultsControllerDelegate {
     }
     
     func controllerDidChangeContent(_ controller: NSFetchedResultsController<any NSFetchRequestResult>) {
-        viewController.tableViewEndUpdates()
-        viewController.configure(with: numberOfRows())
+        viewController?.tableViewEndUpdates()
+        viewController?.configure(with: numberOfRows())
     }
 }

@@ -7,14 +7,14 @@
 
 import Foundation
 
-protocol AddListProtocol {
+protocol AddListProtocol: AnyObject {
     func setupUI()
     func dismiss()
     func showAlert()
 }
 
 final class AddListPresenter: NSObject {
-    private let viewController: AddListProtocol
+    private weak var viewController: AddListProtocol?
     private let repository: TodoRepository
     
     init(viewController: AddListProtocol, repository: TodoRepository) {
@@ -23,21 +23,21 @@ final class AddListPresenter: NSObject {
     }
     
     func viewDidLoad() {
-        viewController.setupUI()
+        viewController?.setupUI()
     }
     
     func leftBarButtonTapped() {
-        viewController.dismiss()
+        viewController?.dismiss()
     }
     
     func rightBarButtonTapped(_ input: String) {
         if input.trim == "Important" {
-            viewController.showAlert()
+            viewController?.showAlert()
         } else {
             Task {
                 try await repository.createList(name: input)
                 await MainActor.run {
-                    viewController.dismiss()
+                    viewController?.dismiss()
                 }
             }
         }

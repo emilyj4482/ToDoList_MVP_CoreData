@@ -7,7 +7,7 @@
 
 import Foundation
 
-protocol EditTaskProtocol {
+protocol EditTaskProtocol: AnyObject {
     func setupUI()
     func dismiss()
     func setupContainerView(mode: EditTaskMode)
@@ -15,7 +15,7 @@ protocol EditTaskProtocol {
 }
 
 final class EditTaskPresenter: NSObject {
-    private let viewController: EditTaskProtocol
+    private weak var viewController: EditTaskProtocol?
     private let repository: TodoRepository
     
     private let mode: EditTaskMode
@@ -27,8 +27,8 @@ final class EditTaskPresenter: NSObject {
     }
     
     func viewDidLoad() {
-        viewController.setupUI()
-        viewController.setupContainerView(mode: mode)
+        viewController?.setupUI()
+        viewController?.setupContainerView(mode: mode)
     }
     
     func doneButtonTapped(with text: String) {
@@ -41,11 +41,11 @@ final class EditTaskPresenter: NSObject {
                     try await repository.retitleTask(objectID: task.objectID, newTitle: text)
                 }
                 await MainActor.run {
-                    viewController.dismiss()
+                    viewController?.dismiss()
                 }
             } catch {
                 await MainActor.run {
-                    viewController.showError(error)
+                    viewController?.showError(error)
                 }
             }
         }

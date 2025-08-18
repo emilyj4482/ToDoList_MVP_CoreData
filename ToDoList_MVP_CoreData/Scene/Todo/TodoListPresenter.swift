@@ -8,7 +8,7 @@
 import UIKit
 import CoreData
 
-protocol TodoListProtocol {
+protocol TodoListProtocol: AnyObject {
     func setupNavigationBar()
     func setupUI()
     func setupContainerView()
@@ -29,7 +29,7 @@ protocol TodoListProtocol {
 }
 
 class TodoListPresenter: NSObject {
-    private let viewController: TodoListProtocol
+    private weak var viewController: TodoListProtocol?
     private let repository: TodoRepository
     
     private var list: ListEntity
@@ -57,26 +57,26 @@ class TodoListPresenter: NSObject {
     }
     
     func viewDidLoad() {
-        viewController.setupUI()
-        viewController.setupNavigationBar()
-        viewController.setupContainerView()
-        viewController.hideButtonsIfNeeded()
+        viewController?.setupUI()
+        viewController?.setupNavigationBar()
+        viewController?.setupContainerView()
+        viewController?.hideButtonsIfNeeded()
         loadTasks()
     }
     
     func rightBarButtonTapped() {
-        viewController.showTextFieldAlert()
+        viewController?.showTextFieldAlert()
     }
     
     func addTaskButtonTapped() {
         if let listID = list.id {
-            viewController.presentEditTaskViewController(with: .create(listID: listID))
+            viewController?.presentEditTaskViewController(with: .create(listID: listID))
         }
     }
     
     func editSwipeActionTapped(indexPath: IndexPath) {
         let task = fetchedResultsController.object(at: indexPath)
-        viewController.presentEditTaskViewController(with: .retitle(task: task))
+        viewController?.presentEditTaskViewController(with: .retitle(task: task))
     }
 }
 
@@ -84,9 +84,9 @@ extension TodoListPresenter {
     func loadTasks() {
         do {
             try fetchedResultsController.performFetch()
-            viewController.reloadData()
+            viewController?.reloadData()
         } catch {
-            viewController.showError(error)
+            viewController?.showError(error)
         }
     }
     
@@ -112,14 +112,14 @@ extension TodoListPresenter {
         do {
             try await repository.renameList(objectID: list.objectID, newName: name)
         } catch {
-            viewController.showError(error)
+            viewController?.showError(error)
         }
     }
     
     func reloadListEntity() {
         if let fetchedList = repository.fetchList(with: list.objectID) {
             self.list = fetchedList
-            viewController.reloadList(from: fetchedList)
+            viewController?.reloadList(from: fetchedList)
         }
     }
     
@@ -132,7 +132,7 @@ extension TodoListPresenter {
     }
     
     func showActionSheet(indexPath: IndexPath) {
-        viewController.showActionSheet(indexPath: indexPath)
+        viewController?.showActionSheet(indexPath: indexPath)
     }
     
     func deleteTask(at indexPath: IndexPath) async {
@@ -141,7 +141,7 @@ extension TodoListPresenter {
             try await repository.deleteTask(objectID: taskToDelete.objectID)
         } catch {
             await MainActor.run {
-                viewController.showError(error)
+                viewController?.showError(error)
             }
         }
     }
@@ -149,7 +149,7 @@ extension TodoListPresenter {
 
 extension TodoListPresenter: NSFetchedResultsControllerDelegate {
     func controllerWillChangeContent(_ controller: NSFetchedResultsController<any NSFetchRequestResult>) {
-        viewController.tableViewBeginUpdates()
+        viewController?.tableViewBeginUpdates()
     }
     
     func controller(_ controller: NSFetchedResultsController<any NSFetchRequestResult>,
@@ -161,21 +161,21 @@ extension TodoListPresenter: NSFetchedResultsControllerDelegate {
         switch type {
         case .insert:
             if let newIndexPath = newIndexPath {
-                viewController.tableViewInsertRows(at: [newIndexPath])
+                viewController?.tableViewInsertRows(at: [newIndexPath])
             }
         case .update:
             if let indexPath = indexPath {
-                viewController.tableViewReloadRows(at: [indexPath])
+                viewController?.tableViewReloadRows(at: [indexPath])
             }
         case .delete:
             if let indexPath = indexPath {
-                viewController.tableViewDeleteRows(at: [indexPath])
+                viewController?.tableViewDeleteRows(at: [indexPath])
             }
         case .move:
             // handles moving between sections
             if let indexPath = indexPath, let newIndexPath = newIndexPath {
-                viewController.tableViewDeleteRows(at: [indexPath])
-                viewController.tableViewInsertRows(at: [newIndexPath])
+                viewController?.tableViewDeleteRows(at: [indexPath])
+                viewController?.tableViewInsertRows(at: [newIndexPath])
             }
         default:
             break
@@ -191,15 +191,15 @@ extension TodoListPresenter: NSFetchedResultsControllerDelegate {
         // >> this happens when the last item in a section is removed or the first item is added to a new section
         switch type {
         case .insert:
-            viewController.tableViewInsertSections(IndexSet(integer: sectionIndex))
+            viewController?.tableViewInsertSections(IndexSet(integer: sectionIndex))
         case .delete:
-            viewController.tableViewDeleteSections(IndexSet(integer: sectionIndex))
+            viewController?.tableViewDeleteSections(IndexSet(integer: sectionIndex))
         default:
             break
         }
     }
     
     func controllerDidChangeContent(_ controller: NSFetchedResultsController<any NSFetchRequestResult>) {
-        viewController.tableViewEndUpdates()
+        viewController?.tableViewEndUpdates()
     }
 }
