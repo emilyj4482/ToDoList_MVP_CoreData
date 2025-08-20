@@ -9,6 +9,7 @@ import UIKit
 
 class TodoListViewController: UIViewController {
     
+    weak var coordinator: TodoListCoordinator?
     private lazy var presenter = TodoListPresenter(viewController: self, repository: repository, list: list)
     private let containerView = TodoListView()
     private var repository: TodoRepository
@@ -74,15 +75,7 @@ extension TodoListViewController: TodoListProtocol {
     }
     
     func presentEditTaskViewController(with mode: EditTaskMode) {
-        var viewController: UIViewController
-        
-        switch mode {
-        case .create(let listID):
-            viewController = EditTaskViewController(repository: repository, mode: .create(listID: listID))
-        case .retitle(let task):
-            viewController = EditTaskViewController(repository: repository, mode: .retitle(task: task))
-        }
-        present(viewController, animated: true)
+        coordinator?.showEditTaskView(with: mode)
     }
     
     func reloadData() {

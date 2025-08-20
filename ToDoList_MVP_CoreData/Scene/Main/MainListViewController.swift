@@ -9,6 +9,7 @@ import UIKit
 
 class MainListViewController: UIViewController {
     
+    weak var coordinator: MainListCoordinator?
     private lazy var presenter = MainListPresenter(viewController: self, repository: repository)
     private let containerView = MainListView()
     private var repository: TodoRepository
@@ -60,13 +61,11 @@ extension MainListViewController: MainListProtocol {
     }
     
     func presentAddListViewController() {
-        let addListViewController = UINavigationController(rootViewController: AddListViewController(repository: repository))
-        present(addListViewController, animated: true)
+        coordinator?.showAddListView()
     }
     
     func pushToTodoListViewController(with list: ListEntity) {
-        let viewController = TodoListViewController(repository: repository, list: list)
-        navigationController?.pushViewController(viewController, animated: true)
+        coordinator?.showTodoListView(with: list)
     }
     
     func configure(with numberOfRows: Int) {

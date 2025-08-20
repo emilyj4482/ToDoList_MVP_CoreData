@@ -9,6 +9,7 @@ import UIKit
 
 class EditTaskViewController: UIViewController, EditTaskProtocol {
     
+    weak var coordinator: EditTaskCoordinator?
     private lazy var presenter = EditTaskPresenter(viewController: self, repository: repository, mode: mode)
     private let containerView = EditTaskView()
     private var repository: TodoRepository
@@ -47,7 +48,7 @@ class EditTaskViewController: UIViewController, EditTaskProtocol {
     }
     
     func dismiss() {
-        dismiss(animated: true)
+        coordinator?.finish()
     }
     
     func setupContainerView(mode: EditTaskMode) {

@@ -9,6 +9,7 @@ import UIKit
 
 class AddListViewController: UIViewController, AddListProtocol {
     
+    weak var coordinator: AddListCoordinator?
     private lazy var presenter = AddListPresenter(viewController: self, repository: repository)
     private var repository: TodoRepository
     
@@ -67,7 +68,7 @@ class AddListViewController: UIViewController, AddListProtocol {
     }
     
     func dismiss() {
-        dismiss(animated: true)
+        coordinator?.finish()
     }
     
     func showAlert() {
