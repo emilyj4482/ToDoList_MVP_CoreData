@@ -49,6 +49,13 @@ class AddListViewController: UIViewController, AddListProtocol {
         presenter.viewDidLoad()
     }
     
+    override func viewDidDisappear(_ animated: Bool) {
+        super.viewDidDisappear(animated)
+        if navigationController?.isBeingDismissed == true {
+            coordinator?.finish(shouldDismiss: false)
+        }
+    }
+    
     func setupUI() {
         view.backgroundColor = .systemBackground
         
@@ -68,7 +75,7 @@ class AddListViewController: UIViewController, AddListProtocol {
     }
     
     func dismiss() {
-        coordinator?.finish()
+        coordinator?.finish(shouldDismiss: true)
     }
     
     func showAlert() {

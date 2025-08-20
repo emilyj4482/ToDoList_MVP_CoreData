@@ -12,6 +12,13 @@ protocol Coordinator: AnyObject {
     var navigationController: UINavigationController { get set }
 }
 
+extension Coordinator {
+    func childDidFinish(_ child: Coordinator?) {
+        guard let child else { return }
+        childCoordinators.removeAll { $0 === child }
+    }
+}
+
 final class AppCoordinator: Coordinator {
     var childCoordinators = [Coordinator]()
     var navigationController: UINavigationController

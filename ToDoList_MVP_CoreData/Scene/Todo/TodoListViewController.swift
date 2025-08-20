@@ -33,6 +33,13 @@ class TodoListViewController: UIViewController {
         presenter.viewDidLoad()
     }
     
+    override func viewDidDisappear(_ animated: Bool) {
+        super.viewDidDisappear(animated)
+        if isMovingFromParent {
+            coordinator?.finish(shouldPop: false)
+        }
+    }
+    
     @objc private func rightBarButtonTapped() {
         presenter.rightBarButtonTapped()
     }

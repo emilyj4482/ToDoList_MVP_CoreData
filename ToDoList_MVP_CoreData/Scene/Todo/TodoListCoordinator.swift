@@ -8,21 +8,15 @@
 import UIKit
 
 final class TodoListCoordinator: Coordinator {
+    weak var parentCoordinator: MainListCoordinator?
     var childCoordinators = [Coordinator]()
     var navigationController: UINavigationController
     
     private let repository: TodoRepository
     
-    private let onFinish: (TodoListCoordinator) -> Void
-    
-    init(
-        navigationController: UINavigationController,
-        repository: TodoRepository,
-        onFinish: @escaping (TodoListCoordinator) -> Void
-    ) {
+    init(navigationController: UINavigationController, repository: TodoRepository) {
         self.navigationController = navigationController
         self.repository = repository
-        self.onFinish = onFinish
     }
     
     func start(with list: ListEntity) {
@@ -31,15 +25,16 @@ final class TodoListCoordinator: Coordinator {
         navigationController.pushViewController(viewController, animated: true)
     }
     
-    func finish() {
-        navigationController.popViewController(animated: true)
-        onFinish(self)
+    func finish(shouldPop: Bool) {
+        if shouldPop {
+            navigationController.popViewController(animated: true)
+        }
+        parentCoordinator?.childDidFinish(self)
     }
     
     func showEditTaskView(with mode: EditTaskMode) {
-        let editTaskCoordinator = EditTaskCoordinator(navigationController: navigationController, repository: repository) { [weak self] coordinator in
-            self?.childCoordinators.removeAll { $0 === coordinator }
-        }
+        let editTaskCoordinator = EditTaskCoordinator(navigationController: navigationController, repository: repository)
+        editTaskCoordinator.parentCoordinator = self
         childCoordinators.append(editTaskCoordinator)
         editTaskCoordinator.start(with: mode)
     }

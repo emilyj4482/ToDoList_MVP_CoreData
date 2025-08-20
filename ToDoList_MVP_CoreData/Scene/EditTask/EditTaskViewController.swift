@@ -31,6 +31,13 @@ class EditTaskViewController: UIViewController, EditTaskProtocol {
         presenter.viewDidLoad()
     }
     
+    override func viewDidDisappear(_ animated: Bool) {
+        super.viewDidDisappear(animated)
+        if isBeingDismissed {
+            coordinator?.finish(shouldDismiss: false)
+        }
+    }
+    
     func setupUI() {
         sheetPresentationController?.detents = [.custom(resolver: { _ in return 50 })]
         
@@ -48,7 +55,7 @@ class EditTaskViewController: UIViewController, EditTaskProtocol {
     }
     
     func dismiss() {
-        coordinator?.finish()
+        coordinator?.finish(shouldDismiss: true)
     }
     
     func setupContainerView(mode: EditTaskMode) {

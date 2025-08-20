@@ -24,17 +24,15 @@ final class MainListCoordinator: Coordinator {
     }
     
     func showAddListView() {
-        let addListCoordinator = AddListCoordinator(navigationController: navigationController, repository: repository) { [weak self] coordinator in
-            self?.childCoordinators.removeAll { $0 === coordinator }
-        }
+        let addListCoordinator = AddListCoordinator(navigationController: navigationController, repository: repository)
+        addListCoordinator.parentCoordinator = self
         childCoordinators.append(addListCoordinator)
         addListCoordinator.start()
     }
     
     func showTodoListView(with list: ListEntity) {
-        let todoListCoordinator = TodoListCoordinator(navigationController: navigationController, repository: repository) { [weak self] Coordinator in
-            self?.childCoordinators.removeAll { $0 === Coordinator }
-        }
+        let todoListCoordinator = TodoListCoordinator(navigationController: navigationController, repository: repository)
+        todoListCoordinator.parentCoordinator = self
         childCoordinators.append(todoListCoordinator)
         todoListCoordinator.start(with: list)
     }

@@ -8,21 +8,15 @@
 import UIKit
 
 final class AddListCoordinator: Coordinator {
+    weak var parentCoordinator: MainListCoordinator?
     var childCoordinators = [Coordinator]()
     var navigationController: UINavigationController
     
     private let repository: TodoRepository
     
-    private let onFinish: (AddListCoordinator) -> Void
-    
-    init(
-        navigationController: UINavigationController,
-        repository: TodoRepository,
-        onFinish: @escaping (AddListCoordinator) -> Void
-    ) {
+    init(navigationController: UINavigationController, repository: TodoRepository) {
         self.navigationController = navigationController
         self.repository = repository
-        self.onFinish = onFinish
     }
     
     func start() {
@@ -32,10 +26,13 @@ final class AddListCoordinator: Coordinator {
         self.navigationController.present(navigationController, animated: true)
     }
     
-    func finish() {
-        navigationController.dismiss(animated: true) { [weak self] in
-            guard let self = self else { return }
-            onFinish(self)
+    func finish(shouldDismiss: Bool) {
+        if shouldDismiss {
+            navigationController.dismiss(animated: true) { [weak self] in
+                self?.parentCoordinator?.childDidFinish(self)
+            }
+        } else {
+            parentCoordinator?.childDidFinish(self)
         }
     }
 }

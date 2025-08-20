@@ -8,21 +8,15 @@
 import UIKit
 
 final class EditTaskCoordinator: Coordinator {
+    weak var parentCoordinator: TodoListCoordinator?
     var childCoordinators = [Coordinator]()
     var navigationController: UINavigationController
     
     private let repository: TodoRepository
     
-    private let onFinish: (EditTaskCoordinator) -> Void
-    
-    init(
-        navigationController: UINavigationController,
-        repository: TodoRepository,
-        onFinish: @escaping (EditTaskCoordinator) -> Void
-    ) {
+    init(navigationController: UINavigationController, repository: TodoRepository) {
         self.navigationController = navigationController
         self.repository = repository
-        self.onFinish = onFinish
     }
     
     func start(with mode: EditTaskMode) {
@@ -39,10 +33,13 @@ final class EditTaskCoordinator: Coordinator {
         self.navigationController.present(viewController, animated: true)
     }
     
-    func finish() {
-        navigationController.dismiss(animated: true) { [weak self] in
-            guard let self = self else { return }
-            onFinish(self)
+    func finish(shouldDismiss: Bool) {
+        if shouldDismiss {
+            navigationController.dismiss(animated: true) { [weak self] in
+                self?.parentCoordinator?.childDidFinish(self)
+            }
+        } else {
+            parentCoordinator?.childDidFinish(self)
         }
     }
 }
