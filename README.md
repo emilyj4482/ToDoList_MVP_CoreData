@@ -22,27 +22,27 @@
 │   └── Todo.xcdatamodeld
 ├── 📂 Scene
 │   ├── 📂 Main
-│   │   ├─ MainListCoordinator.swift.swift
-│   │   ├─ MainListViewController.swift.swift
-│   │   ├─ MainListView.swift.swift
-│   │   ├─ ListCell.swift.swift
-│   │   └─ MainListPresenter.swift.swift
+│   │   ├─ MainListCoordinator.swift
+│   │   ├─ MainListViewController.swift
+│   │   ├─ MainListView.swift
+│   │   ├─ ListCell.swift
+│   │   └─ MainListPresenter.swift
 │   ├── 📂 AddList
-│   │   ├─ AddListCoordinator.swift.swift
-│   │   ├─ AddListViewController.swift.swift
-│   │   └─ AddListPresenter.swift.swift
+│   │   ├─ AddListCoordinator.swift
+│   │   ├─ AddListViewController.swift
+│   │   └─ AddListPresenter.swift
 │   ├── 📂 Todo
-│   │   ├─ TodoListCoordinator.swift.swift
-│   │   ├─ TodoListViewController.swift.swift
-│   │   ├─ TodoListView.swift.swift
-│   │   ├─ TaskCell.swift.swift
-│   │   ├─ TaskDoneHeader.swift.swift
-│   │   └─ TodoListPresenter.swift.swift
+│   │   ├─ TodoListCoordinator.swift
+│   │   ├─ TodoListViewController.swift
+│   │   ├─ TodoListView.swift
+│   │   ├─ TaskCell.swift
+│   │   ├─ TaskDoneHeader.swift
+│   │   └─ TodoListPresenter.swift
 │   ├── 📂 EditTask
-│   │   ├─ EditTaskCoordinator.swift.swift
-│   │   ├─ EditTaskViewController.swift.swift
-│   │   ├─ EditTaskView.swift.swift
-│   │   └─ EditTaskPresenter.swift.swift
+│   │   ├─ EditTaskCoordinator.swift
+│   │   ├─ EditTaskViewController.swift
+│   │   ├─ EditTaskView.swift
+│   │   └─ EditTaskPresenter.swift
 ├── Assets.xcassets
 └── Info.plist
 ```
