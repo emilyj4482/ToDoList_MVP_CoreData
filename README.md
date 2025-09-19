@@ -257,21 +257,43 @@ extension MainListPresenter: NSFetchedResultsControllerDelegate {
 ### 📌 Error handling
 데이터 CRUD 메소드들을 `throws`로 구현하여 에러 발생 시 `alert`이 호출되도록 처리하였습니다. (사용자 경험 개선)
 ```swift
-final class MainListPresenter: NSObject {
-
+final class TodoRepository {
     // ... //
 
-    func didSelectRow(at index: Int) {
-        if let list = repository.fetchList(at: index) {
-            viewController?.pushToTodoListViewController(with: list)
-        } else {
-            viewController?.showError(CoreDataError.fetchingObjectFailed)
+    func renameList(objectID: NSManagedObjectID, newName: String) async throws {
+        let backgroundContext = coreDataManager.newBackgroundContext()
+        
+        // 중복 검사
+        let processedName = try await processListName(newName)
+        
+        try await backgroundContext.perform {
+            let managedObject = try backgroundContext.existingObject(with: objectID)
+            
+            guard let list = managedObject as? ListEntity else {
+                throw CoreDataError.castingObjectFailed
+            }
+            
+            list.name = processedName
+            try backgroundContext.save()
         }
     }
 }
 ```
 ```swift
-class MainListViewController: MainListProtocol {
+final class TodoListPresenter: NSObject {
+    // ... //
+
+    func renameList(with name: String) async {
+        do {
+            try await repository.renameList(objectID: list.objectID, newName: name)
+        } catch {
+            viewController?.showError(error)
+        }
+    }
+}
+```
+```swift
+class TodoListViewController: TodoListProtocol {
     // ... //
 
     func showError(_ error: Error) {
